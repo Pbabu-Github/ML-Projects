@@ -6,11 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="PB">
-<meta name="dcterms.date" content="2025-02-20">
-<meta name="description" content="A Blog post about classifying penguins with machine learning using logistic Regression.">
 
-<title>Classifying Palmer Penguins – My Awesome CSCI 0451 Blog</title>
+<title>Goal of Project – My Awesome CSCI 0451 Blog</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -171,31 +168,14 @@ background-size: cover;
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Classifying Palmer Penguins</h1>
-                  <div>
-        <div class="description">
-          A Blog post about classifying penguins with machine learning using logistic Regression.
-        </div>
-      </div>
-                </div>
+      <h1 class="title">Goal of Project</h1>
+                      </div>
   </div>
     
   
   <div class="quarto-title-meta">
 
-      <div>
-      <div class="quarto-title-meta-heading">Author</div>
-      <div class="quarto-title-meta-contents">
-               <p>PB </p>
-            </div>
-    </div>
       
-      <div>
-      <div class="quarto-title-meta-heading">Published</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">February 20, 2025</p>
-      </div>
-    </div>
     
       
     </div>
@@ -212,16 +192,24 @@ background-size: cover;
 
 
 
-<section id="goal-of-project" class="level3">
-<h3 class="anchored" data-anchor-id="goal-of-project">Goal of Project</h3>
+<div id="cell-1" class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>title: Hello Blog</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>author: PB</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>date: <span class="st">'2025-02-20'</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>image: <span class="st">"image.jpg"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>description: <span class="st">"A Blog post about classifying penguins with machine learning."</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">format</span>: html</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="op">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Predicting a penguin’s species based on its physical measurements is an interesting challenge in data analysis and machine learning. In this blog, we’ll explore the Palmer Penguins dataset, which was collected by Dr.&nbsp;Kristen Gorman and the Palmer Station, to analyze biological measurements of three penguin species in Antarctica. Through data visualization and feature selection, we’ll uncover key insights and build a classification model that achieves perfect accuracy using a carefully chosen set of features. Along the way, we’ll discuss our findings and ensure a reproducible and insightful approach to species classification. ### Loading Data We will now use the Pandas function to read the CSV and also take a look at the data and the different variables and columns we have in our dataset before we do and data explorations and analysis.</p>
-<div id="cell-2" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>train_url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/PhilChodrow/ml-notes/main/data/palmer-penguins/train.csv"</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>train <span class="op">=</span> pd.read_csv(train_url)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>train.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
+<div id="cell-3" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>train_url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/PhilChodrow/ml-notes/main/data/palmer-penguins/train.csv"</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>train <span class="op">=</span> pd.read_csv(train_url)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>train.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
 <div>
 
 
@@ -355,35 +343,34 @@ background-size: cover;
 </div>
 </div>
 </div>
-</section>
 <section id="data-cleaning" class="level2">
 <h2 class="anchored" data-anchor-id="data-cleaning">Data Cleaning</h2>
 <p>Our dataset contains numerous variables, including comments and region information, that are not relevant for training our model. Since we will be focusing on variables such as island, culmen length, culmen depth, flipper length, and body mass, we will remove unnecessary columns before proceeding with data exploration, visualization, and model training. Let’s start by loading the necessary packages for data cleaning, visualization, and model training. We will also convert categorical feature columns like Sex and Island into one-hot encoded 0-1( or true or false) columns using the pd.get_dummies function. Additionally, we can see that Species is a categorical variable, but instead of one-hot encoding, we will use label encoding to convert it into numerical labels: 0 for Adelie, 1 for Chinstrap, and 2 for Gentoo. This transformation will make data visualization and model training much easier.</p>
-<div id="cell-4" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> SVC <span class="co"># support vector classifier</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mlxtend.plotting <span class="im">import</span> plot_decision_regions <span class="co"># for visualization later</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> LabelEncoder</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Encode categorical features and label</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>le <span class="op">=</span> LabelEncoder()</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>le.fit(train[<span class="st">"Species"</span>])</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prepare_data(df):</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.drop([<span class="st">"studyName"</span>, <span class="st">"Sample Number"</span>, <span class="st">"Individual ID"</span>, <span class="st">"Date Egg"</span>, <span class="st">"Comments"</span>, <span class="st">"Region"</span>, <span class="st">"Stage"</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df[df[<span class="st">"Sex"</span>] <span class="op">!=</span> <span class="st">"."</span>]</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.dropna()</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> le.transform(df[<span class="st">"Species"</span>])</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.drop([<span class="st">"Species"</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># One-hot encode categorical variables</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span>(pd.get_dummies(df)).astype(<span class="bu">int</span>)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df, y</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare training data</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>X_train, y_train <span class="op">=</span> prepare_data(train)</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>X_train.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div id="cell-6" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> SVC <span class="co"># support vector classifier</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mlxtend.plotting <span class="im">import</span> plot_decision_regions <span class="co"># for visualization later</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> LabelEncoder</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Encode categorical features and label</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>le <span class="op">=</span> LabelEncoder()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>le.fit(train[<span class="st">"Species"</span>])</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prepare_data(df):</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.drop([<span class="st">"studyName"</span>, <span class="st">"Sample Number"</span>, <span class="st">"Individual ID"</span>, <span class="st">"Date Egg"</span>, <span class="st">"Comments"</span>, <span class="st">"Region"</span>, <span class="st">"Stage"</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df[df[<span class="st">"Sex"</span>] <span class="op">!=</span> <span class="st">"."</span>]</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.dropna()</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> le.transform(df[<span class="st">"Species"</span>])</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.drop([<span class="st">"Species"</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># One-hot encode categorical variables</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span>(pd.get_dummies(df)).astype(<span class="bu">int</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df, y</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare training data</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>X_train, y_train <span class="op">=</span> prepare_data(train)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>X_train.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="31">
 <div>
 
 
@@ -497,83 +484,80 @@ background-size: cover;
 <h3 class="anchored" data-anchor-id="visualizing-the-data">Visualizing the data</h3>
 <p>The bar chart below shows the number of penguins of each species on different islands, helping us identify patterns in species distribution. Interestingly, we observe: - Torgersen Island: Only Adelie penguins are present, with a population of about 30-40 individuals. - Dream Island: Has both Adelie and Chinstrap penguins, with Chinstrap being the dominant species. - Biscoe Island: Has both Adelie and Gentoo penguins, with Gentoo having the largest population overall.</p>
 <p>Chinstrap penguins are only found on Dream Island, while Gentoo penguins are exclusive to Biscoe Island. Adelie penguins, on the other hand, are the most widespread, appearing on all three islands. Based on this distribution, the island where a penguin is found could be a useful feature for predicting its species.</p>
-<div id="cell-6" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Map species labels back to names</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>species_map <span class="op">=</span> {<span class="dv">0</span>: <span class="st">'Adelie'</span>, <span class="dv">1</span>: <span class="st">'Chinstrap'</span>, <span class="dv">2</span>: <span class="st">'Gentoo'</span>}</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>species_island_counts <span class="op">=</span> X_train.copy()</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>species_island_counts[<span class="st">"Species"</span>] <span class="op">=</span> [species_map[label] <span class="cf">for</span> label <span class="kw">in</span> y_train]</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert one-hot encoded islands back to a single column</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>species_island_counts[<span class="st">"Island"</span>] <span class="op">=</span> species_island_counts[[<span class="st">"Island_Biscoe"</span>, <span class="st">"Island_Dream"</span>, <span class="st">"Island_Torgersen"</span>]].idxmax(axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>species_island_counts[<span class="st">"Island"</span>] <span class="op">=</span> species_island_counts[<span class="st">"Island"</span>].<span class="bu">str</span>.replace(<span class="st">"Island_"</span>, <span class="st">""</span>)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Count number of penguins per species per island</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>plot_data <span class="op">=</span> species_island_counts.groupby([<span class="st">"Island"</span>, <span class="st">"Species"</span>]).size().reset_index(name<span class="op">=</span><span class="st">"Count"</span>)</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>plot_data, x<span class="op">=</span><span class="st">"Island"</span>, y<span class="op">=</span><span class="st">"Count"</span>, hue<span class="op">=</span><span class="st">"Species"</span>, palette<span class="op">=</span><span class="st">"mako"</span>)</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Island"</span>)</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Number of Penguins"</span>)</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Penguin Species Distribution Across Islands"</span>)</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>plt.legend(title<span class="op">=</span><span class="st">"Species"</span>)</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-8" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Map species labels back to names</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>species_map <span class="op">=</span> {<span class="dv">0</span>: <span class="st">'Adelie'</span>, <span class="dv">1</span>: <span class="st">'Chinstrap'</span>, <span class="dv">2</span>: <span class="st">'Gentoo'</span>}</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>species_island_counts <span class="op">=</span> X_train.copy()</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>species_island_counts[<span class="st">"Species"</span>] <span class="op">=</span> [species_map[label] <span class="cf">for</span> label <span class="kw">in</span> y_train]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert one-hot encoded islands back to a single column</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>species_island_counts[<span class="st">"Island"</span>] <span class="op">=</span> species_island_counts[[<span class="st">"Island_Biscoe"</span>, <span class="st">"Island_Dream"</span>, <span class="st">"Island_Torgersen"</span>]].idxmax(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>species_island_counts[<span class="st">"Island"</span>] <span class="op">=</span> species_island_counts[<span class="st">"Island"</span>].<span class="bu">str</span>.replace(<span class="st">"Island_"</span>, <span class="st">""</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Count number of penguins per species per island</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>plot_data <span class="op">=</span> species_island_counts.groupby([<span class="st">"Island"</span>, <span class="st">"Species"</span>]).size().reset_index(name<span class="op">=</span><span class="st">"Count"</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>plot_data, x<span class="op">=</span><span class="st">"Island"</span>, y<span class="op">=</span><span class="st">"Count"</span>, hue<span class="op">=</span><span class="st">"Species"</span>, palette<span class="op">=</span><span class="st">"mako"</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Island"</span>)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Number of Penguins"</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Penguin Species Distribution Across Islands"</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>plt.legend(title<span class="op">=</span><span class="st">"Species"</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="blog1_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>Based on the graph above, we can see that by simply looking at the islands, we can somewhat predict the species of the penguin. This is a good example of a feature that could help predict the species. However, the model would be much more efficient if each island only hosted one species of penguin. Since some islands have more than one species, we might want to explore additional features. For example, if a penguin is on Biscoe Island and has a certain Culmen length and Culmen depth, can we make more accurate predictions based on those measurements? To explore this, we will create a graph to assess whether including Culmen lenght and Culmen depth is a useful feature for predicting the species on each island.</p>
-<div id="cell-8" class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the relationship between Culmen Length and Culmen Depth for each species on each island</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>sns.relplot(data <span class="op">=</span>train, hue<span class="op">=</span><span class="st">"Species"</span>, y <span class="op">=</span> <span class="st">'Culmen Depth (mm)'</span>, x <span class="op">=</span>  <span class="st">'Culmen Length (mm)'</span>,col <span class="op">=</span> <span class="st">'Island'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;seaborn.axisgrid.FacetGrid at 0x149d2fc10&gt;</code></pre>
-</div>
+<div id="cell-10" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the relationship between Culmen Length and Culmen Depth for each species on each island</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>sns.relplot(data <span class="op">=</span>train, hue<span class="op">=</span><span class="st">"Species"</span>, y <span class="op">=</span> <span class="st">'Culmen Depth (mm)'</span>, x <span class="op">=</span>  <span class="st">'Culmen Length (mm)'</span>,col <span class="op">=</span> <span class="st">'Island'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-5-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="blog1_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The graph above looks at the relationship between Culmen Depth (mm) and Culmen Length (mm) for different penguin species, separated by island. Each species is color-coded to highlight patterns in their beak dimensions. From this graph, we can observe: - Gentoo penguins (orange) tend to have longer culmen lengths and shallower culmen depths. - Adelie penguins (green) have moderate culmen lengths and a wide range of culmen depths. - Chinstrap penguins (blue) have longer culmen lenghts compared to Adelie penguins but exhibit similar culmen Depths. ## Can Culmen Features Help in Classification? Looking at the separability of species by island: - Biscoe Island: Gentoo and Adelie penguins are linearly separable, meaning a simple model could classify them effectively based on culmen features. - Dream Island: Chinstrap and Adelie penguins overlap in culmen depth, making them harder to separate linearly. However, their culmen lengths show some distinction, which could aid classification. - Torgersen Island: Since only Adelie penguins are found here, culmen features are irrelevant for classification on this island.</p>
 <p>This suggests that culmen depth and length can be strong features for classifying species, especially when combined with island location. ## Exploring Culmen Features in relation to Flipper Lenght</p>
-<div id="cell-10" class="cell" data-execution_count="4">
+<div id="cell-12" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sns.relplot(data <span class="op">=</span> train, y <span class="op">=</span> <span class="st">'Culmen Length (mm)'</span>, x <span class="op">=</span>  <span class="st">'Flipper Length (mm)'</span>,  hue <span class="op">=</span> <span class="st">'Species'</span>).<span class="bu">set</span>(title<span class="op">=</span><span class="st">'Relation between Flipper Length and Culmen Length'</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>sns.relplot(data <span class="op">=</span> train, y <span class="op">=</span> <span class="st">'Culmen Depth (mm)'</span>, x <span class="op">=</span>  <span class="st">'Flipper Length (mm)'</span>,  hue <span class="op">=</span> <span class="st">'Species'</span>).<span class="bu">set</span>(title<span class="op">=</span><span class="st">'Relation between Flipper Length and Culmen Depth'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="blog1_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-6-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="blog1_files/figure-html/cell-8-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The first graph explores the relationship between flipper length and culmen length across penguin species. Gentoo penguins have both longer flipper lengths and culmen lengths compared to the other species, making them easily distinguishable. Adelie penguins, in contrast, have shorter values for both features, clustering in the lower-left section of the graph. Chinstrap penguins overlap with Adelie penguins in flipper length but tend to have slightly longer culmen lengths, creating some classification challenges.</p>
 <p>The second graph examines the relationship between flipper length and culmen depth. Here, Gentoo penguins are clearly separable from the other two species due to their significantly shallower culmen depths, forming a distinct cluster in the lower section. Howeber the Adelie and Chinstrap penguins overlap a lot more, particularly in flipper length and culmen depth. While Gentoo penguins can be classified easily, distinguishing between Adelie and Chinstrap penguins would be really difficult because of this clustering.</p>
-<div id="cell-12" class="cell">
+<div id="cell-14" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>train.groupby(<span class="st">'Species'</span>).agg({</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Flipper Length (mm)'</span>: <span class="st">'mean'</span>,</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Culmen Length (mm)'</span>: <span class="st">'mean'</span>,</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Culmen Depth (mm)'</span>: <span class="st">'mean'</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>}).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell-output cell-output-display" data-execution_count="29">
 <div>
 
 
@@ -621,7 +605,7 @@ background-size: cover;
 <section id="now-we-are-going-to-chose-feature-to-train-our-model" class="level2">
 <h2 class="anchored" data-anchor-id="now-we-are-going-to-chose-feature-to-train-our-model">Now we are going to chose feature to train our model</h2>
 <p>By using the combinations function from the itertools package, we generate different combinations of categorical and continuous features. So we will pair categorical variables like Sex and Clutch Completion with continuous variables such as Culmen Length, Culmen Depth, and Flipper Length. This allows us to explore various feature combinations and evaluate which ones might be most useful for accurately classifying the penguin species.</p>
-<div id="cell-15" class="cell">
+<div id="cell-17" class="cell" data-execution_count="105">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> itertools <span class="im">import</span> combinations</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
@@ -656,11 +640,11 @@ background-size: cover;
 </div>
 </div>
 <p>According to itertools, the best features to use are ‘Sex_FEMALE’, ‘Sex_MALE’, ‘Culmen Length (mm)’, and ‘Culmen Depth (mm)’. However, we wanted to explore how our model would perform based on our exploration of the island features along with the Culmen features. Thus, we will now reassign these as the best features and use them to train our model.</p>
-<div id="cell-17" class="cell">
+<div id="cell-19" class="cell" data-execution_count="90">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Rearranging Best featrues so that the first two columns are the quantitative columns and the rest are the qualitative columns</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>best_features <span class="op">=</span> [<span class="st">'Culmen Length (mm)'</span>, <span class="st">'Culmen Depth (mm)'</span>, <span class="st">'Island_Biscoe'</span>, <span class="st">'Island_Dream'</span>, <span class="st">'Island_Torgersen'</span>]</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>best_features</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell-output cell-output-display" data-execution_count="90">
 <pre><code>['Culmen Length (mm)',
  'Culmen Depth (mm)',
  'Island_Biscoe',
@@ -671,7 +655,7 @@ background-size: cover;
 </section>
 <section id="let-us-now-prepare-our-test-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="let-us-now-prepare-our-test-dataset">Let us now prepare our Test Dataset</h2>
-<div id="cell-19" class="cell">
+<div id="cell-21" class="cell" data-execution_count="91">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load test data</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>test_url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/PhilChodrow/ml-notes/main/data/palmer-penguins/test.csv"</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>test <span class="op">=</span> pd.read_csv(test_url)</span>
@@ -683,7 +667,7 @@ background-size: cover;
 <section id="training-and-evaluating-our-model" class="level2">
 <h2 class="anchored" data-anchor-id="training-and-evaluating-our-model">Training and evaluating our Model</h2>
 <p>In the code below, we use a Logistic Regression model and train it on the selected features: [‘Culmen Length (mm)’, ‘Culmen Depth (mm)’, ‘Island_Biscoe’, ‘Island_Dream’, ‘Island_Torgersen’]. We then evaluate the accuracy using the LR.score function. Our training accuracy was 99%, and our testing accuracy—measuring how well the model performed on unseen data—was 100%. The confusion matrix confirms that we correctly classified all penguins with no misclassifications. Specifically, our model correctly identified 31 Adelie, 11 Chinstrap, and 26 Gentoo penguins, achieving perfect classification.</p>
-<div id="cell-21" class="cell">
+<div id="cell-23" class="cell" data-execution_count="92">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> accuracy_score, classification_report, confusion_matrix</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -717,7 +701,7 @@ Confusion Matrix:
 <section id="plotting-our-results" class="level2">
 <h2 class="anchored" data-anchor-id="plotting-our-results">Plotting our results</h2>
 <p>This code below helps us visualize the decision regions of our classification model by plotting how different penguin species are separated based on culmen features and island locations. It creates a grid of values for the culmen length and depth, predicts species across the grid. Each subplot represents a different island, showing how the model’s decision boundaries change depending on the island feature. This helps us understand how the model differentiates between Adelie, Chinstrap, and Gentoo penguins on each island.</p>
-<div id="cell-23" class="cell">
+<div id="cell-25" class="cell" data-execution_count="104">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -777,14 +761,14 @@ Confusion Matrix:
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="blog1_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-12-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="blog1_files/figure-html/cell-14-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
