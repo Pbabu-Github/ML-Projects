@@ -212,10 +212,18 @@ background-size: cover;
 
 
 
-<section id="goal-of-project" class="level3">
-<h3 class="anchored" data-anchor-id="goal-of-project">Goal of Project</h3>
-<p>Predicting a penguin’s species based on its physical measurements is an interesting challenge in data analysis and machine learning. In this blog, we’ll explore the Palmer Penguins dataset, which was collected by Dr.&nbsp;Kristen Gorman and the Palmer Station, to analyze biological measurements of three penguin species in Antarctica. Through data visualization and feature selection, we’ll uncover key insights and build a classification model that achieves perfect accuracy using a carefully chosen set of features. Along the way, we’ll discuss our findings and ensure a reproducible and insightful approach to species classification. ### Loading Data We will now use the Pandas function to read the CSV and also take a look at the data and the different variables and columns we have in our dataset before we do and data explorations and analysis.</p>
-<div id="cell-2" class="cell" data-execution_count="1">
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>The Palmer Penguins dataset, collected by Dr.&nbsp;Kristen Gorman and the Palmer Station, Antarctica LTER, provides physiological measurements for three species of penguins—Adélie, Chinstrap, and Gentoo—inhabiting the Palmer Archipelago. First published in 2014 and later made widely accessible to the data science community, this dataset serves as a valuable resource for exploring classification techniques and species differentiation. In this blog post, I analyze the dataset using machine learning models to classify penguin species based on features such as flipper length, body mass, and culmen dimensions. By analyzing physical measurements we identify key features that contribute to accurate species prediction. Through data visualization and feature selection, we uncover patterns that distinguish species based on island location and physical traits. Using logistic regression, we evaluate different feature combinations and determine an optimal set for classification and acheive a 99% training accuracy and a 100% testing accuracy. Our findings highlight the power of data-driven approaches in biological classification while ensuring a reproducible and insightful methodology.</p>
+</section>
+<section id="goal-of-project" class="level2">
+<h2 class="anchored" data-anchor-id="goal-of-project">Goal of Project</h2>
+<p>Predicting a penguin’s species based on its physical measurements is an interesting challenge in data analysis and machine learning. In this blog, we’ll explore the Palmer Penguins dataset, which was collected by Dr.&nbsp;Kristen Gorman and the Palmer Station, to analyze biological measurements of three penguin species in Antarctica. Through data visualization and feature selection, we’ll uncover key insights and build a classification model that achieves perfect accuracy using a carefully chosen set of features. Along the way, we’ll discuss our findings and ensure a reproducible and insightful approach to species classification.</p>
+</section>
+<section id="loading-data" class="level2">
+<h2 class="anchored" data-anchor-id="loading-data">Loading Data</h2>
+<p>We will now use the Pandas function to read the CSV and also take a look at the data and the different variables and columns we have in our dataset before we do and data explorations and analysis.</p>
+<div id="cell-3" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>train_url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/PhilChodrow/ml-notes/main/data/palmer-penguins/train.csv"</span></span>
@@ -359,7 +367,7 @@ background-size: cover;
 <section id="data-cleaning" class="level2">
 <h2 class="anchored" data-anchor-id="data-cleaning">Data Cleaning</h2>
 <p>Our dataset contains numerous variables, including comments and region information, that are not relevant for training our model. Since we will be focusing on variables such as island, culmen length, culmen depth, flipper length, and body mass, we will remove unnecessary columns before proceeding with data exploration, visualization, and model training. Let’s start by loading the necessary packages for data cleaning, visualization, and model training. We will also convert categorical feature columns like Sex and Island into one-hot encoded 0-1( or true or false) columns using the pd.get_dummies function. Additionally, we can see that Species is a categorical variable, but instead of one-hot encoding, we will use label encoding to convert it into numerical labels: 0 for Adelie, 1 for Chinstrap, and 2 for Gentoo. This transformation will make data visualization and model training much easier.</p>
-<div id="cell-4" class="cell" data-execution_count="2">
+<div id="cell-5" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> SVC <span class="co"># support vector classifier</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mlxtend.plotting <span class="im">import</span> plot_decision_regions <span class="co"># for visualization later</span></span>
@@ -493,11 +501,17 @@ background-size: cover;
 </div>
 </div>
 </div>
-<section id="visualizing-the-data" class="level3">
-<h3 class="anchored" data-anchor-id="visualizing-the-data">Visualizing the data</h3>
-<p>The bar chart below shows the number of penguins of each species on different islands, helping us identify patterns in species distribution. Interestingly, we observe: - Torgersen Island: Only Adelie penguins are present, with a population of about 30-40 individuals. - Dream Island: Has both Adelie and Chinstrap penguins, with Chinstrap being the dominant species. - Biscoe Island: Has both Adelie and Gentoo penguins, with Gentoo having the largest population overall.</p>
+</section>
+<section id="visualizing-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-the-data">Visualizing the data</h2>
+<p>The bar chart below shows the number of penguins of each species on different islands, helping us identify patterns in species distribution. Interestingly, we observe:</p>
+<ul>
+<li><p>Torgersen Island: Only Adelie penguins are present, with a population of about 30-40 individuals.</p></li>
+<li><p>Dream Island: Has both Adelie and Chinstrap penguins, with Chinstrap being the dominant species.</p></li>
+<li><p>Biscoe Island: Has both Adelie and Gentoo penguins, with Gentoo having the largest population overall.</p></li>
+</ul>
 <p>Chinstrap penguins are only found on Dream Island, while Gentoo penguins are exclusive to Biscoe Island. Adelie penguins, on the other hand, are the most widespread, appearing on all three islands. Based on this distribution, the island where a penguin is found could be a useful feature for predicting its species.</p>
-<div id="cell-6" class="cell" data-execution_count="3">
+<div id="cell-7" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -530,26 +544,48 @@ background-size: cover;
 </div>
 </div>
 <p>Based on the graph above, we can see that by simply looking at the islands, we can somewhat predict the species of the penguin. This is a good example of a feature that could help predict the species. However, the model would be much more efficient if each island only hosted one species of penguin. Since some islands have more than one species, we might want to explore additional features. For example, if a penguin is on Biscoe Island and has a certain Culmen length and Culmen depth, can we make more accurate predictions based on those measurements? To explore this, we will create a graph to assess whether including Culmen lenght and Culmen depth is a useful feature for predicting the species on each island.</p>
-<div id="cell-8" class="cell">
+<div id="cell-9" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the relationship between Culmen Length and Culmen Depth for each species on each island</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>sns.relplot(data <span class="op">=</span>train, hue<span class="op">=</span><span class="st">"Species"</span>, y <span class="op">=</span> <span class="st">'Culmen Depth (mm)'</span>, x <span class="op">=</span>  <span class="st">'Culmen Length (mm)'</span>,col <span class="op">=</span> <span class="st">'Island'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<pre><code>&lt;seaborn.axisgrid.FacetGrid at 0x149d2fc10&gt;</code></pre>
-</div>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> sns.relplot(data<span class="op">=</span>train, hue<span class="op">=</span><span class="st">"Species"</span>, y<span class="op">=</span><span class="st">"Culmen Depth (mm)"</span>, x<span class="op">=</span><span class="st">"Culmen Length (mm)"</span>, col<span class="op">=</span><span class="st">"Island"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>g.set_titles(size<span class="op">=</span><span class="dv">18</span>)  <span class="co"># Increase subplot titles</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>g.set_axis_labels(<span class="st">"Culmen Length (mm)"</span>, <span class="st">"Culmen Depth (mm)"</span>, fontsize<span class="op">=</span><span class="dv">16</span>)  <span class="co"># Increase axis labels font size</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>g._legend.set_title(<span class="st">"Species"</span>, prop<span class="op">=</span>{<span class="st">'size'</span>: <span class="dv">16</span>}) </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>[g._legend.get_texts()[i].set_fontsize(<span class="dv">14</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(g._legend.get_texts()))]  <span class="co"># Increase legend text size</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-5-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>The graph above looks at the relationship between Culmen Depth (mm) and Culmen Length (mm) for different penguin species, separated by island. Each species is color-coded to highlight patterns in their beak dimensions. From this graph, we can observe: - Gentoo penguins (orange) tend to have longer culmen lengths and shallower culmen depths. - Adelie penguins (green) have moderate culmen lengths and a wide range of culmen depths. - Chinstrap penguins (blue) have longer culmen lenghts compared to Adelie penguins but exhibit similar culmen Depths. ## Can Culmen Features Help in Classification? Looking at the separability of species by island: - Biscoe Island: Gentoo and Adelie penguins are linearly separable, meaning a simple model could classify them effectively based on culmen features. - Dream Island: Chinstrap and Adelie penguins overlap in culmen depth, making them harder to separate linearly. However, their culmen lengths show some distinction, which could aid classification. - Torgersen Island: Since only Adelie penguins are found here, culmen features are irrelevant for classification on this island.</p>
-<p>This suggests that culmen depth and length can be strong features for classifying species, especially when combined with island location. ## Exploring Culmen Features in relation to Flipper Lenght</p>
-<div id="cell-10" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sns.relplot(data <span class="op">=</span> train, y <span class="op">=</span> <span class="st">'Culmen Length (mm)'</span>, x <span class="op">=</span>  <span class="st">'Flipper Length (mm)'</span>,  hue <span class="op">=</span> <span class="st">'Species'</span>).<span class="bu">set</span>(title<span class="op">=</span><span class="st">'Relation between Flipper Length and Culmen Length'</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>sns.relplot(data <span class="op">=</span> train, y <span class="op">=</span> <span class="st">'Culmen Depth (mm)'</span>, x <span class="op">=</span>  <span class="st">'Flipper Length (mm)'</span>,  hue <span class="op">=</span> <span class="st">'Species'</span>).<span class="bu">set</span>(title<span class="op">=</span><span class="st">'Relation between Flipper Length and Culmen Depth'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The graph above looks at the relationship between Culmen Depth (mm) and Culmen Length (mm) for different penguin species, separated by island. Each species is color-coded to highlight patterns in their beak dimensions. From this graph, we can observe:</p>
+<ul>
+<li><p>Gentoo penguins (orange) tend to have longer culmen lengths and shallower culmen depths.</p></li>
+<li><p>Adelie penguins (green) have moderate culmen lengths and a wide range of culmen depths.</p></li>
+<li><p>Chinstrap penguins (blue) have longer culmen lenghts compared to Adelie penguins but exhibit similar culmen Depths.</p></li>
+</ul>
+</section>
+<section id="can-culmen-features-help-in-classification" class="level2">
+<h2 class="anchored" data-anchor-id="can-culmen-features-help-in-classification">Can Culmen Features Help in Classification?</h2>
+<p>Looking at the separability of species by island:</p>
+<ul>
+<li><p>Biscoe Island: Gentoo and Adelie penguins are linearly separable, meaning a simple model could classify them effectively based on culmen features.</p></li>
+<li><p>Dream Island: Chinstrap and Adelie penguins overlap in culmen depth, making them harder to separate linearly. However, their culmen lengths show some distinction, which could aid classification.</p></li>
+<li><p>Torgersen Island: Since only Adelie penguins are found here, culmen features are irrelevant for classification on this island.</p></li>
+</ul>
+<p>This suggests that culmen depth and length can be strong features for classifying species, especially when combined with island location.</p>
+</section>
+<section id="exploring-culmen-features-in-relation-to-flipper-lenght" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-culmen-features-in-relation-to-flipper-lenght">Exploring Culmen Features in relation to Flipper Lenght</h2>
+<p>The graph below explores the relationship between flipper length and culmen length across penguin species. Gentoo penguins have both longer flipper lengths and culmen lengths compared to the other species, making them easily distinguishable. Adelie penguins, in contrast, have shorter values for both features, clustering in the lower-left section of the graph. Chinstrap penguins overlap with Adelie penguins in flipper length but tend to have slightly longer culmen lengths, creating some classification challenges.</p>
+<div id="cell-11" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sns.relplot(data <span class="op">=</span> train, y <span class="op">=</span> <span class="st">'Culmen Length (mm)'</span>, x <span class="op">=</span>  <span class="st">'Flipper Length (mm)'</span>,  hue <span class="op">=</span> <span class="st">'Species'</span>).<span class="bu">set</span>(title<span class="op">=</span><span class="st">'Relation between Flipper Length and Culmen Length'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -557,23 +593,30 @@ background-size: cover;
 </figure>
 </div>
 </div>
+</div>
+<div id="cell-12" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>sns.relplot(data <span class="op">=</span> train, y <span class="op">=</span> <span class="st">'Culmen Depth (mm)'</span>, x <span class="op">=</span>  <span class="st">'Flipper Length (mm)'</span>,  hue <span class="op">=</span> <span class="st">'Species'</span>).<span class="bu">set</span>(title<span class="op">=</span><span class="st">'Relation between Flipper Length and Culmen Depth'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-6-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>The first graph explores the relationship between flipper length and culmen length across penguin species. Gentoo penguins have both longer flipper lengths and culmen lengths compared to the other species, making them easily distinguishable. Adelie penguins, in contrast, have shorter values for both features, clustering in the lower-left section of the graph. Chinstrap penguins overlap with Adelie penguins in flipper length but tend to have slightly longer culmen lengths, creating some classification challenges.</p>
-<p>The second graph examines the relationship between flipper length and culmen depth. Here, Gentoo penguins are clearly separable from the other two species due to their significantly shallower culmen depths, forming a distinct cluster in the lower section. Howeber the Adelie and Chinstrap penguins overlap a lot more, particularly in flipper length and culmen depth. While Gentoo penguins can be classified easily, distinguishing between Adelie and Chinstrap penguins would be really difficult because of this clustering.</p>
-<div id="cell-12" class="cell">
+<p>The graph above examines the relationship between flipper length and culmen depth. Here, Gentoo penguins are clearly separable from the other two species due to their significantly shallower culmen depths, forming a distinct cluster in the lower section. Howeber the Adelie and Chinstrap penguins overlap a lot more, particularly in flipper length and culmen depth. While Gentoo penguins can be classified easily, distinguishing between Adelie and Chinstrap penguins would be really difficult because of this clustering.</p>
+</section>
+<section id="feature-analysis-flipper-and-culmen-measurements" class="level2">
+<h2 class="anchored" data-anchor-id="feature-analysis-flipper-and-culmen-measurements">Feature Analysis: Flipper and Culmen Measurements</h2>
+<p>The table below shows the mean values of flipper length, culmen length, and culmen depth for each penguin species using the .groupby() function. The table summarizes the average flipper length, culmen length, and culmen depth for each penguin species. Gentoo penguins have the longest flipper and culmen lengths but the shallowest culmen depth. Chinstrap penguins have longer culmen lengths than Adelie penguins but similar culmen depths. Adelie penguins have the shortest flipper and culmen lengths but slightly deeper culmens than Chinstrap. These differences highlight key features that can help classify penguin species.</p>
+<div id="cell-15" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>train.groupby(<span class="st">'Species'</span>).agg({</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Flipper Length (mm)'</span>: <span class="st">'mean'</span>,</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Culmen Length (mm)'</span>: <span class="st">'mean'</span>,</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Culmen Depth (mm)'</span>: <span class="st">'mean'</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>}).reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
 
@@ -615,13 +658,11 @@ background-size: cover;
 </div>
 </div>
 </div>
-<p>This code above calculates the mean values of flipper length, culmen length, and culmen depth for each penguin species using the .groupby() function. The table summarizes the average flipper length, culmen length, and culmen depth for each penguin species. Gentoo penguins have the longest flipper and culmen lengths but the shallowest culmen depth. Chinstrap penguins have longer culmen lengths than Adelie penguins but similar culmen depths. Adelie penguins have the shortest flipper and culmen lengths but slightly deeper culmens than Chinstrap. These differences highlight key features that can help classify penguin species.</p>
 </section>
-</section>
-<section id="now-we-are-going-to-chose-feature-to-train-our-model" class="level2">
-<h2 class="anchored" data-anchor-id="now-we-are-going-to-chose-feature-to-train-our-model">Now we are going to chose feature to train our model</h2>
+<section id="now-we-are-going-to-chose-features-to-train-our-model" class="level2">
+<h2 class="anchored" data-anchor-id="now-we-are-going-to-chose-features-to-train-our-model">Now we are going to chose features to train our model</h2>
 <p>By using the combinations function from the itertools package, we generate different combinations of categorical and continuous features. So we will pair categorical variables like Sex and Clutch Completion with continuous variables such as Culmen Length, Culmen Depth, and Flipper Length. This allows us to explore various feature combinations and evaluate which ones might be most useful for accurately classifying the penguin species.</p>
-<div id="cell-15" class="cell">
+<div id="cell-17" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> itertools <span class="im">import</span> combinations</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
@@ -656,11 +697,11 @@ background-size: cover;
 </div>
 </div>
 <p>According to itertools, the best features to use are ‘Sex_FEMALE’, ‘Sex_MALE’, ‘Culmen Length (mm)’, and ‘Culmen Depth (mm)’. However, we wanted to explore how our model would perform based on our exploration of the island features along with the Culmen features. Thus, we will now reassign these as the best features and use them to train our model.</p>
-<div id="cell-17" class="cell">
+<div id="cell-19" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Rearranging Best featrues so that the first two columns are the quantitative columns and the rest are the qualitative columns</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>best_features <span class="op">=</span> [<span class="st">'Culmen Length (mm)'</span>, <span class="st">'Culmen Depth (mm)'</span>, <span class="st">'Island_Biscoe'</span>, <span class="st">'Island_Dream'</span>, <span class="st">'Island_Torgersen'</span>]</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>best_features</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>['Culmen Length (mm)',
  'Culmen Depth (mm)',
  'Island_Biscoe',
@@ -669,9 +710,9 @@ background-size: cover;
 </div>
 </div>
 </section>
-<section id="let-us-now-prepare-our-test-dataset" class="level2">
-<h2 class="anchored" data-anchor-id="let-us-now-prepare-our-test-dataset">Let us now prepare our Test Dataset</h2>
-<div id="cell-19" class="cell">
+<section id="lets-now-prepare-our-test-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="lets-now-prepare-our-test-dataset">Let’s now prepare our Test Dataset</h2>
+<div id="cell-21" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load test data</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>test_url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/PhilChodrow/ml-notes/main/data/palmer-penguins/test.csv"</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>test <span class="op">=</span> pd.read_csv(test_url)</span>
@@ -683,7 +724,7 @@ background-size: cover;
 <section id="training-and-evaluating-our-model" class="level2">
 <h2 class="anchored" data-anchor-id="training-and-evaluating-our-model">Training and evaluating our Model</h2>
 <p>In the code below, we use a Logistic Regression model and train it on the selected features: [‘Culmen Length (mm)’, ‘Culmen Depth (mm)’, ‘Island_Biscoe’, ‘Island_Dream’, ‘Island_Torgersen’]. We then evaluate the accuracy using the LR.score function. Our training accuracy was 99%, and our testing accuracy—measuring how well the model performed on unseen data—was 100%. The confusion matrix confirms that we correctly classified all penguins with no misclassifications. Specifically, our model correctly identified 31 Adelie, 11 Chinstrap, and 26 Gentoo penguins, achieving perfect classification.</p>
-<div id="cell-21" class="cell">
+<div id="cell-23" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> accuracy_score, classification_report, confusion_matrix</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -714,10 +755,10 @@ Confusion Matrix:
 </div>
 </div>
 </section>
-<section id="plotting-our-results" class="level2">
-<h2 class="anchored" data-anchor-id="plotting-our-results">Plotting our results</h2>
+<section id="decision-region-plots" class="level2">
+<h2 class="anchored" data-anchor-id="decision-region-plots">Decision Region Plots</h2>
 <p>This code below helps us visualize the decision regions of our classification model by plotting how different penguin species are separated based on culmen features and island locations. It creates a grid of values for the culmen length and depth, predicts species across the grid. Each subplot represents a different island, showing how the model’s decision boundaries change depending on the island feature. This helps us understand how the model differentiates between Adelie, Chinstrap, and Gentoo penguins on each island.</p>
-<div id="cell-23" class="cell">
+<div id="cell-25" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -729,66 +770,91 @@ Confusion Matrix:
 <span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    x1 <span class="op">=</span> X[X.columns[<span class="dv">1</span>]]</span>
 <span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    qual_features <span class="op">=</span> X.columns[<span class="dv">2</span>:]</span>
 <span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    fig, axarr <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="bu">len</span>(qual_features), figsize<span class="op">=</span>(<span class="dv">7</span> <span class="op">*</span> <span class="bu">len</span>(qual_features), <span class="dv">3</span>))  <span class="co"># doing this to fit three plots side by side</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    fig.suptitle(title, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a grid</span></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    grid_x <span class="op">=</span> np.linspace(x0.<span class="bu">min</span>(), x0.<span class="bu">max</span>(), <span class="dv">501</span>)</span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    grid_y <span class="op">=</span> np.linspace(x1.<span class="bu">min</span>(), x1.<span class="bu">max</span>(), <span class="dv">501</span>)</span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    xx, yy <span class="op">=</span> np.meshgrid(grid_x, grid_y)</span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    XX <span class="op">=</span> xx.ravel()</span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    YY <span class="op">=</span> yy.ravel()</span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(qual_features) <span class="op">==</span> <span class="dv">1</span>:</span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>        axarr <span class="op">=</span> [axarr] </span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, ax <span class="kw">in</span> <span class="bu">enumerate</span>(axarr):</span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>        XY <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>            X.columns[<span class="dv">0</span>]: XX,</span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>            X.columns[<span class="dv">1</span>]: YY</span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>        })</span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> qual_features:</span>
-<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>            XY[j] <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>        XY[qual_features[i]] <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> model.predict(XY)</span>
-<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> p.reshape(xx.shape)</span>
-<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Use contour plot to visualize the predictions</span></span>
-<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>        ax.contourf(xx, yy, p, cmap<span class="op">=</span><span class="st">"jet"</span>, alpha<span class="op">=</span><span class="fl">0.2</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>        ix <span class="op">=</span> X[qual_features[i]] <span class="op">==</span> <span class="dv">1</span></span>
-<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>        ax.scatter(x0[ix], x1[ix], c<span class="op">=</span>y[ix], cmap<span class="op">=</span><span class="st">"jet"</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>        ax.<span class="bu">set</span>(xlabel<span class="op">=</span>X.columns[<span class="dv">0</span>], ylabel<span class="op">=</span>X.columns[<span class="dv">1</span>], title<span class="op">=</span>qual_features[i])</span>
-<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>    patches <span class="op">=</span> [Patch(color<span class="op">=</span>color, label<span class="op">=</span>spec) <span class="cf">for</span> color, spec <span class="kw">in</span> <span class="bu">zip</span>([<span class="st">"red"</span>, <span class="st">"green"</span>, <span class="st">"blue"</span>], [<span class="st">"Adelie"</span>, <span class="st">"Chinstrap"</span>, <span class="st">"Gentoo"</span>])]</span>
-<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>    fig.legend(handles<span class="op">=</span>patches, title<span class="op">=</span><span class="st">"Species"</span>, loc<span class="op">=</span><span class="st">"upper right"</span>)</span>
-<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout(rect<span class="op">=</span>[<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.9</span>, <span class="dv">1</span>])</span>
-<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Run function for training and test sets</span></span>
-<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>plot_regions(LR, X_train[best_features], y_train, title<span class="op">=</span><span class="st">"Training Set"</span>)</span>
-<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>plot_regions(LR, X_test[best_features], y_pred, title<span class="op">=</span><span class="st">"Test Set"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define a color mapping where Gentoo is green and Chinstrap is blue</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    species_colors <span class="op">=</span> {<span class="dv">0</span>: <span class="st">'red'</span>, <span class="dv">1</span>: <span class="st">'blue'</span>, <span class="dv">2</span>: <span class="st">'green'</span>}</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adjust figure size for better visibility</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    fig, axarr <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="bu">len</span>(qual_features), figsize<span class="op">=</span>(<span class="dv">12</span> <span class="op">*</span> <span class="bu">len</span>(qual_features), <span class="dv">10</span>))  <span class="co"># Increase size</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    fig.suptitle(title, fontsize<span class="op">=</span><span class="dv">40</span>, y<span class="op">=</span><span class="fl">1.05</span>)  <span class="co"># Adjust title position and size</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a grid</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    grid_x <span class="op">=</span> np.linspace(x0.<span class="bu">min</span>(), x0.<span class="bu">max</span>(), <span class="dv">501</span>)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    grid_y <span class="op">=</span> np.linspace(x1.<span class="bu">min</span>(), x1.<span class="bu">max</span>(), <span class="dv">501</span>)</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    xx, yy <span class="op">=</span> np.meshgrid(grid_x, grid_y)</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>    XX <span class="op">=</span> xx.ravel()</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    YY <span class="op">=</span> yy.ravel()</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(qual_features) <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>        axarr <span class="op">=</span> [axarr] </span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, ax <span class="kw">in</span> <span class="bu">enumerate</span>(axarr):</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>        XY <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>            X.columns[<span class="dv">0</span>]: XX,</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>            X.columns[<span class="dv">1</span>]: YY</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> qual_features:</span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>            XY[j] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>        XY[qual_features[i]] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> model.predict(XY)</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> p.reshape(xx.shape)</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Use contour plot to visualize the predictions</span></span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>        ax.contourf(xx, yy, p, cmap<span class="op">=</span><span class="st">"jet"</span>, alpha<span class="op">=</span><span class="fl">0.2</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>        ix <span class="op">=</span> X[qual_features[i]] <span class="op">==</span> <span class="dv">1</span></span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Convert y[ix] to a pandas Series and apply map to get colors</span></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>        y_series <span class="op">=</span> pd.Series(y[ix])  <span class="co"># Convert y[ix] to a Series</span></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>        ax.scatter(x0[ix], x1[ix], c<span class="op">=</span>y_series.<span class="bu">map</span>(species_colors), s<span class="op">=</span><span class="dv">80</span>)  <span class="co"># Larger scatter points</span></span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>        ax.set_xlabel(X.columns[<span class="dv">0</span>], fontsize<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>        ax.set_ylabel(X.columns[<span class="dv">1</span>], fontsize<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>        ax.set_title(qual_features[i], fontsize<span class="op">=</span><span class="dv">35</span>)</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>        ax.tick_params(axis<span class="op">=</span><span class="st">'both'</span>, labelsize<span class="op">=</span><span class="dv">25</span>)  <span class="co"># Larger tick labels</span></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Increase spacing between subplots and adjust title positioning</span></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>    plt.subplots_adjust(wspace<span class="op">=</span><span class="fl">0.4</span>, hspace<span class="op">=</span><span class="fl">0.3</span>, top<span class="op">=</span><span class="fl">0.85</span>)  </span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create legend with specific colors for species</span></span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>    patches <span class="op">=</span> [Patch(color<span class="op">=</span>color, label<span class="op">=</span>spec) <span class="cf">for</span> spec, color <span class="kw">in</span> <span class="bu">zip</span>([<span class="st">"Adelie"</span>, <span class="st">"Chinstrap"</span>, <span class="st">"Gentoo"</span>], [<span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>])]</span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a>    fig.legend(handles<span class="op">=</span>patches, title<span class="op">=</span><span class="st">"Species"</span>, loc<span class="op">=</span><span class="st">"upper right"</span>, fontsize<span class="op">=</span><span class="dv">30</span>, title_fontsize<span class="op">=</span><span class="dv">35</span>, bbox_to_anchor<span class="op">=</span>(<span class="fl">1.03</span>, <span class="dv">1</span>)) </span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Run function for training and test sets</span></span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a>plot_regions(LR, X_train[best_features], y_train, title<span class="op">=</span><span class="st">"Training Set"</span>)</span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>plot_regions(LR, X_test[best_features], y_pred, title<span class="op">=</span><span class="st">"Test Set"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-12-output-2.png" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/cell-13-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>The decision region plots clearly show how our model classifies penguins based on culmen length and depth, with island location influencing the boundaries.</p>
+<ul>
+<li><p>Island Biscoe: The model effectively separates Gentoo (green) from Adelie (red) penguins, as they occupy distinct regions.</p></li>
+<li><p>Island Dream: Chinstrap (blue) and Adelie (red) penguins have overlapping regions, making classification slightly more challenging. However, longer culmen lengths help differentiate Chinstrap penguins.</p></li>
+<li><p>Island Torgersen: Since only Adlie penguins are found here, the entire region is classified as red, confirming that island location alone can sometimes be a strong predictor.</p></li>
+</ul>
+<p>The clean decision boundaries in most plots indicate that the selected features work really well for our classification.</p>
+</section>
+<section id="discussion-and-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="discussion-and-takeaways">Discussion And Takeaways</h2>
+<p>Through this analysis, I gained several important insights about both the dataset and machine learning model performance. One of the key takeaways was the importance of data preprocessing, including encoding categorical variables and handling missing data, to ensure the model could learn effectively. By visualizing relationships between features, I noticed that certain physical traits, like culmen length and culmen depth, played a crucial role in distinguishing penguin species. Additionally, island location proved to be a strong predictor, as some species were exclusive to certain islands.</p>
+<p>Training a logistic regression model with carefully selected features led to a 99% accuracy on the training set and 100% accuracy on the test set, showing that the model generalized well to unseen data. The decision region plots clearly illustrated how the model separated species based on their culmen features, with some overlap between Adelie and Chinstrap penguins making classification slightly more challenging. Overall, this project demonstrated how feature selection, visualization, and a well-trained model can achieve highly accurate classifications, reinforcing the power of machine learning in biological research.</p>
 
 
 </section>
