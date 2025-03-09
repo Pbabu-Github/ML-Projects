@@ -3,8 +3,9 @@
     "listing": "/index.html",
     "items": [
       "/posts/discecting_racial_bias_algo/index.html",
-      "/posts/linear_score_function-Banks/index.html",
-      "/posts/Penguins/index.html"
+      "/posts/Design and Impact of Automated Decision Systems/index.html",
+      "/posts/Penguins/index.html",
+      "/posts/Auditing Bias/index.html"
     ]
   }
 ]
