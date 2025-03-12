@@ -1361,41 +1361,56 @@ Group 9 Predicted Positive Rate: 0.349</code></pre>
 <li><p>Group&nbsp;2 (Black): Has its own feasible line, which typically differs because of a higher prevalence (more individuals in the group are actually employed) and/or different PPV requirements.</p></li>
 </ul>
 <p>If we tried to make FPR the same for both groups (say, moving Group&nbsp;2’s marker to Group&nbsp;1’s FPR), we would generally need to increase Group&nbsp;2’s FNR. That means more Black individuals who are actually employed would be missed by the model—an important trade-off for fairness. Essentially, achieving equal FPR across groups often comes at the cost of raising FNR for at least one group, which can exacerbate disparities in missed positives. This plot helps us visualize how much we’d have to adjust each group’s threshold to meet that fairness goal, and how it could impact different groups in our dataset.</p>
-<div id="cell-33" class="cell" data-execution_count="53">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We fix the desired PPV (here, we use overall_ppv) and compute the feasible FPR for a range of FNR values.</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>fpr_lines <span class="op">=</span> {}</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>fpr_actual <span class="op">=</span> {}</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> g <span class="kw">in</span> groups:</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> (group_test <span class="op">==</span> g)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Prevalence: proportion of true positive labels in this group</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> np.mean(y_test[idx])</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    fnr_range <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Desired PPV is fixed across groups (here, we use overall_ppv)</span></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    PPV_desired <span class="op">=</span> overall_ppv</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compute corresponding FPR using the rearranged equation.</span></span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Avoid division by zero if (1-p)==0.</span></span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    fpr_line <span class="op">=</span> np.where(<span class="dv">1</span><span class="op">-</span>p <span class="op">&gt;</span> <span class="dv">0</span>, ((<span class="dv">1</span> <span class="op">-</span> fnr_range) <span class="op">*</span> p <span class="op">*</span> (<span class="dv">1</span><span class="op">/</span>PPV_desired <span class="op">-</span> <span class="dv">1</span>)) <span class="op">/</span> (<span class="dv">1</span> <span class="op">-</span> p), np.nan)</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    fpr_lines[g] <span class="op">=</span> (fnr_range, fpr_line)</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Actual FNR and FPR for the group (from previous computation)</span></span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> metric <span class="kw">in</span> group_metrics:</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> metric[<span class="st">'group'</span>] <span class="op">==</span> g:</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>            fpr_actual[g] <span class="op">=</span> (metric[<span class="st">'fnr'</span>], metric[<span class="st">'fpr'</span>])</span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the feasible FNR-FPR lines for each group and mark the actual values.</span></span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> g, (fnr_range, fpr_line) <span class="kw">in</span> fpr_lines.items():</span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>    plt.plot(fnr_range, fpr_line, label<span class="op">=</span><span class="ss">f"Feasible for Group </span><span class="sc">{</span>g<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> g <span class="kw">in</span> fpr_actual:</span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>        actual_fnr, actual_fpr <span class="op">=</span> fpr_actual[g]</span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>        plt.plot(actual_fnr, actual_fpr, <span class="st">"o"</span>, markersize<span class="op">=</span><span class="dv">8</span>, label<span class="op">=</span><span class="ss">f"Actual Group </span><span class="sc">{</span>g<span class="sc">}</span><span class="ss">"</span>)</span>
+<p>In the figure below, each colored line shows the combinations of false negative rate (FNR) and false positive rate (FPR) that would achieve the same positive predictive value (PPV) for a particular group, given its prevalence. The colored dots represent our model’s actual (FNR, FPR) for each group. Notably, some groups’ actual points lie close to their feasible lines, meaning only minor threshold adjustments would be required to change their FPR or FNR. However, for groups where the actual point is far from the feasible line (e.g., Group&nbsp;2), forcing a lower FPR would require a significant increase in FNR. In practical terms, that means we would miss many more truly employed individuals from that group. This highlights the inherent trade-off between equalizing FPR across groups and maintaining a reasonable FNR, especially when group prevalences differ.</p>
+<div id="cell-33" class="cell" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>color_map <span class="op">=</span> {</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>: <span class="st">"blue"</span>,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>: <span class="st">"green"</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>: <span class="st">"red"</span>,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">5</span>: <span class="st">"purple"</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">6</span>: <span class="st">"orange"</span>,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="dv">7</span>: <span class="st">"brown"</span>,</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="dv">8</span>: <span class="st">"pink"</span>,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="dv">9</span>: <span class="st">"gray"</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>fpr_lines <span class="op">=</span> {}</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>fpr_actual <span class="op">=</span> {}</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> g <span class="kw">in</span> groups:</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> (group_test <span class="op">==</span> g)</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Prevalence: proportion of true positives in group g</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> np.mean(y_test[idx])</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>    fnr_range <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    PPV_desired <span class="op">=</span> overall_ppv  <span class="co"># fixed desired PPV</span></span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compute feasible FPR using Eq. (2.6)</span></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    fpr_line <span class="op">=</span> np.where((<span class="dv">1</span> <span class="op">-</span> p) <span class="op">&gt;</span> <span class="dv">0</span>, ((<span class="dv">1</span> <span class="op">-</span> fnr_range) <span class="op">*</span> p <span class="op">*</span> (<span class="dv">1</span><span class="op">/</span>PPV_desired <span class="op">-</span> <span class="dv">1</span>)) <span class="op">/</span> (<span class="dv">1</span> <span class="op">-</span> p), np.nan)</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    fpr_lines[g] <span class="op">=</span> (fnr_range, fpr_line)</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get actual FNR and FPR from group_metrics</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> metric <span class="kw">in</span> group_metrics:</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> metric[<span class="st">'group'</span>] <span class="op">==</span> g:</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>            fpr_actual[g] <span class="op">=</span> (metric[<span class="st">'fnr'</span>], metric[<span class="st">'fpr'</span>])</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
 <span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"False Negative Rate (FNR)"</span>)</span>
-<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"False Positive Rate (FPR)"</span>)</span>
-<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Feasible FNR vs. FPR Rates (Chouldechova 2017 Eq. 2.6)"</span>)</span>
-<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the feasible FNR-FPR lines and actual points with consistent colors</span></span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> g, (fnr_range, fpr_line) <span class="kw">in</span> fpr_lines.items():</span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>    plt.plot(fnr_range, fpr_line, linestyle<span class="op">=</span><span class="st">'--'</span>, linewidth<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>             label<span class="op">=</span><span class="ss">f"Feasible for Group </span><span class="sc">{</span>g<span class="sc">}</span><span class="ss">"</span>, color<span class="op">=</span>color_map.get(g, <span class="st">"black"</span>))</span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> g <span class="kw">in</span> fpr_actual:</span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>        actual_fnr, actual_fpr <span class="op">=</span> fpr_actual[g]</span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a>        plt.plot(actual_fnr, actual_fpr, <span class="st">"o"</span>, markersize<span class="op">=</span><span class="dv">10</span>, </span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>                 markeredgecolor<span class="op">=</span><span class="st">'black'</span>, markeredgewidth<span class="op">=</span><span class="fl">1.5</span>,</span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>                 color<span class="op">=</span>color_map.get(g, <span class="st">"black"</span>), </span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a>                 label<span class="op">=</span><span class="ss">f"Actual Group </span><span class="sc">{</span>g<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"False Negative Rate (FNR)"</span>)</span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"False Positive Rate (FPR)"</span>)</span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Feasible FNR vs. FPR Rates (Chouldechova 2017 Eq. 2.6)"</span>)</span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>plt.xlim([<span class="dv">0</span>, <span class="dv">1</span>])</span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>plt.ylim([<span class="dv">0</span>, <span class="fl">0.3</span>])  <span class="co"># Limit the y-axis to 0.3 for better visibility</span></span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -1404,7 +1419,13 @@ Group 9 Predicted Positive Rate: 0.349</code></pre>
 </div>
 </div>
 </div>
-<p><strong>Concluding Discussion</strong></p>
+</section>
+<section id="interpreting-fnr-changes-to-equalize-fpr" class="level2">
+<h2 class="anchored" data-anchor-id="interpreting-fnr-changes-to-equalize-fpr">Interpreting FNR Changes to Equalize FPR:</h2>
+<p>From the feasible lines, we see how each group’s false negative rate (FNR) would have to shift if we wanted all groups to share the same false positive rate (FPR). For example, if Group 2’s actual FPR is higher than Group 1’s, lowering it to match Group 1’s level would require moving Group 2’s marker along its feasible line toward a lower FPR. This shift, however, pushes the marker toward a much higher FNR—often much higher than the group’s current FNR. In other words, this means that, to reduce Group 2’s false positives, we would end up missing many more truly employed individuals (i.e., a spike in FNR). Each group’s line tells a similar story: matching another group’s FPR typically demands a noticeable trade-off in FNR, underscoring the difficulty of balancing error rates across groups when their underlying prevalence differs.</p>
+</section>
+<section id="concluding-discussion" class="level2">
+<h2 class="anchored" data-anchor-id="concluding-discussion"><strong>Concluding Discussion</strong></h2>
 <p>Our project aimed to predict whether an individual is employed using demographic data from the ACS PUMS dataset. Systems like this could benefit various stakeholders. For example, companies in human resources or financial services might use such a model to assess employment status quickly and efficiently. Government agencies could also deploy this system to better understand labor market trends or to guide social policy. Essentially, any organization that needs insights into employment patterns could find value in our approach.</p>
 <p>However, our bias audit revealed important fairness challenges. Although the model is overall well-calibrated—meaning its predicted probabilities match real-world outcomes—it shows differences in error rates across racial groups. Group 1 (White individuals) and Group 2 (Black individuals) have similar overall accuracy, but Black individuals experience a higher false negative rate, indicating that more truly employed individuals are being missed by the model. This disparity in error rates is critical; deploying such a model at scale might inadvertently disadvantage Black individuals, leading to biased outcomes in decision-making processes.</p>
 <p>Beyond bias in error rates, there are other potential concerns. Even if calibration is good, uneven predicted positive rates suggest that the model may favor one group over another, undermining fairness. Moreover, issues such as data quality, changes over time, and the potential misuse of the model in sensitive contexts (e.g., employment or credit scoring) could further compound these problems. To address these concerns, it is important to continue refining the model, incorporate more diverse and representative data, and establish robust monitoring and adjustment procedures when the model is deployed in real-world settings.</p>
