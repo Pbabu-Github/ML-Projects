@@ -697,7 +697,7 @@
     "href": "posts/perceptron/index.html",
     "title": "Implementing Perceptron",
     "section": "",
-    "text": "%load_ext autoreload\n%autoreload 2\nfrom perceptron import Perceptron, PerceptronOptimizer"
+    "text": "File of Perceptron.py https://github.com/Pbabu-Github/csci-0451/blob/main/posts/perceptron/perceptron.py\n%load_ext autoreload\n%autoreload 2\nfrom perceptron import Perceptron, PerceptronOptimizer"
   },
   {
     "objectID": "posts/perceptron/index.html#abstract",

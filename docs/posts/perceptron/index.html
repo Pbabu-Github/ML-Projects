@@ -209,7 +209,8 @@ background-size: cover;
 
 
 
-<div id="cell-1" class="cell" data-execution_count="1">
+<p>File of Perceptron.py https://github.com/Pbabu-Github/csci-0451/blob/main/posts/perceptron/perceptron.py</p>
+<div id="cell-2" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext autoreload</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>autoreload <span class="dv">2</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> perceptron <span class="im">import</span> Perceptron, PerceptronOptimizer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -229,7 +230,7 @@ background-size: cover;
 <li><p>If the point was classified correctly, I just returned a zero vector (so there would be no update needed).</p></li>
 </ul>
 <p>This matches the perceptron update rule taht if a point is wrong, we update the weights with (2y - 1) * x. Lets now perfom some experiments to check our implementation. Before that, teh code below does a simple check to see if our implementation is working by creating 2d data and perfroms the training and prints our loss after our update step.</p>
-<div id="cell-3" class="cell" data-execution_count="2">
+<div id="cell-4" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> perceptron <span class="im">import</span> Perceptron, PerceptronOptimizer, perceptron_data, plot_perceptron_data</span>
@@ -268,7 +269,7 @@ background-size: cover;
 <li><p>We next initialize a <code>Perceptron</code> model and an optimizer. For each iteration we calculate the current loss (misclassification rate), randomly select a single data point and if the model misclassifies it, we update the weights using the Perceptron rule.</p></li>
 <li><p>We repeat this until the model achieves zero loss or we reach the maximum number of iterations.</p></li>
 </ul>
-<div id="cell-5" class="cell" data-execution_count="9">
+<div id="cell-6" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Experiment 1: 2D Data (Linearly Separable</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>X2, y2 <span class="op">=</span> perceptron_data(n_points<span class="op">=</span><span class="dv">300</span>, noise<span class="op">=</span><span class="fl">0.2</span>)  <span class="co">#generate 2d data </span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> Perceptron()</span>
@@ -304,7 +305,7 @@ background-size: cover;
 </div>
 </div>
 <p>Visualizing the loss evolution</p>
-<div id="cell-7" class="cell" data-execution_count="10">
+<div id="cell-8" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#plot loss evolution</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">4</span>))</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.plot(loss_vec, marker<span class="op">=</span><span class="st">'o'</span>, color<span class="op">=</span><span class="st">'slategrey'</span>)</span>
@@ -345,7 +346,7 @@ background-size: cover;
 </ul></li>
 <li>We keep updating until the loss reaches zero or we hit the maximum number of iterations.</li>
 </ul>
-<div id="cell-10" class="cell" data-execution_count="14">
+<div id="cell-11" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Experiment 2: High-Dimensional Data (5 Features) </span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> high_dim_data(n_points<span class="op">=</span><span class="dv">300</span>, noise<span class="op">=</span><span class="fl">0.2</span>, p_dims<span class="op">=</span><span class="dv">5</span>):</span>
@@ -395,7 +396,7 @@ background-size: cover;
 <p>So a single update step still runs in O(p) time. The number of data points <code>n</code> does not affect the time for each step because we’re only using one data point per iteration.</p>
 <p>From the Loss Evolution graph above, we can see that perceptron learns effectively. The drops in loss happen fast, confirming that even in high dimensions, each iteration helps the model improve quickly — as long as the data is linearly separable.</p>
 <p>Experiment 3: Perceptron on 2D Data that is not linearly Separable</p>
-<div id="cell-13" class="cell" data-execution_count="15">
+<div id="cell-14" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate nonseparable 2D data by increasing noise.</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>X_ns, y_ns <span class="op">=</span> perceptron_data(n_points<span class="op">=</span><span class="dv">300</span>, noise<span class="op">=</span><span class="fl">0.6</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>p_ns <span class="op">=</span> Perceptron()</span>
