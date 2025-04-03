@@ -51,26 +51,39 @@ class Perceptron(LinearModel):
         return ((s * y_) <= 0).float().mean()
 
     def grad(self, X, y):
-        """
-       Computes the perceptron gradient for each single example.
-        Arguments:
-        X (torch.Tensor): Single feature vector of shape (p,) or (1, p)
-        y (torch.Tensor): Single label in {0, 1} or {-1, 1}
-        Returns:
-        update (torch.Tensor): Gradient vector for weight update
-        """
         if len(X.shape) == 2:
-            X = X.squeeze(0)  # make sure the shape is (p,)
-        y_ = y if y in (-1, 1) else 2 * y - 1
+            X = X.squeeze(0)  # shape: (p,)
+        if isinstance(y, torch.Tensor):
+            y = y.item()
+        y_ = y if y in (-1, 1) else 2 * y - 1  # convert to ±1 if in {0, 1}
 
-        # Compute score: s = <w, x>
-        s = torch.dot(self.w, X)
-
-        # If misclassified, return update vector
+        s = torch.dot(self.w, X)  # ⟨w, x⟩
+        
         if s * y_ < 0:
             return -y_ * X
         else:
-            return torch.zeros_like(self.w)  # No update needed if classified correctly
+            return torch.zeros_like(self.w)
+    # def grad(self, X, y):
+    #     """
+    #    Computes the perceptron gradient for each single example.
+    #     Arguments:
+    #     X (torch.Tensor): Single feature vector of shape (p,) or (1, p)
+    #     y (torch.Tensor): Single label in {0, 1} or {-1, 1}
+    #     Returns:
+    #     update (torch.Tensor): Gradient vector for weight update
+    #     """
+    #     if len(X.shape) == 2:
+    #         X = X.squeeze(0)  # make sure the shape is (p,)
+    #     y_ = y if y in (-1, 1) else 2 * y - 1
+
+    #     # Compute score: s = <w, x>
+    #     s = torch.dot(self.w, X)
+
+    #     # If misclassified, return update vector
+    #     if s * y_ < 0:
+    #         return -y_ * X
+    #     else:
+    #         return torch.zeros_like(self.w)  # No update needed if classified correctly
 
 class PerceptronOptimizer:
     def __init__(self, model):
@@ -82,17 +95,19 @@ class PerceptronOptimizer:
 
     def step(self, X, y):
         """
-        does one step of the Perceptron learning rule:
-        we compute the current loss, then the gradient. Then update weights: w = w - grad
-
-        Arguments:
-            X (torch.Tensor): Feature matrix (n, p)
-            y (torch.Tensor): Labels in {0, 1} or {-1, 1}, shape (n,)
-
-        Returns:
-            loss (torch.Tensor): Misclassification rate 
+        Does one step of the Perceptron learning rule:
+        Sample one point (xi, yi), compute loss and gradient, update w.
         """
+        # Choose a single random index
+        idx = torch.randint(0, X.size(0), (1,)).item()
+        xi = X[idx]
+        yi = y[idx]
+
+        # Compute loss (optional here, can be tracked externally)
         loss = self.model.loss(X, y)
-        grad = self.model.grad(X, y)
+
+        # Compute and apply gradient
+        grad = self.model.grad(xi, yi)
         self.model.w = self.model.w - grad
+
         return loss
