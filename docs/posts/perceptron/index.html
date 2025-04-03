@@ -209,40 +209,45 @@ background-size: cover;
 
 
 
-<p>%load_ext autoreload %autoreload 2 from perceptron import Perceptron, PerceptronOptimizer</p>
+<div id="cell-1" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext autoreload</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>autoreload <span class="dv">2</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> perceptron <span class="im">import</span> Perceptron, PerceptronOptimizer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <section id="abstract" class="level2">
 <h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
-<p>The Palmer Penguins dataset, collected by Dr.&nbsp;Kristen Gorman and the Palmer Station, Antarctica LTER, provides physiological measurements for three species of penguins—Adélie, Chinstrap, and Gentoo—inhabiting the Palmer Archipelago. First published in 2014 and later made widely accessible to the data science community, this dataset serves as a valuable resource for exploring classification techniques and species differentiation. In this blog post, I analyze the dataset using machine learning models to classify penguin species based on features such as flipper length, body mass, and culmen dimensions. By analyzing physical measurements we identify key features that contribute to accurate species prediction. Through data visualization and feature selection, we uncover patterns that distinguish species based on island location and physical traits. Using logistic regression, we evaluate different feature combinations and determine an optimal set for classification and acheive a 99% training accuracy and a 100% testing accuracy. Our findings highlight the power of data-driven approaches in biological classification while ensuring a reproducible and insightful methodology.</p>
-<div id="cell-2" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> perceptron_data(n_points<span class="op">=</span><span class="dv">100</span>, noise<span class="op">=</span><span class="fl">0.1</span>):</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Generate linearly separable 2D data for binary classification.</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    torch.manual_seed(<span class="dv">123</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> torch.arange(n_points) <span class="op">&gt;=</span> n_points <span class="op">//</span> <span class="dv">2</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> y[:, <span class="va">None</span>] <span class="op">+</span> torch.normal(<span class="fl">0.0</span>, noise, size<span class="op">=</span>(n_points, <span class="dv">2</span>))</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> torch.cat((X, torch.ones((n_points, <span class="dv">1</span>))), dim<span class="op">=</span><span class="dv">1</span>)  <span class="co"># Add bias term</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> y <span class="op">-</span> <span class="dv">1</span>  <span class="co"># Convert from {0, 1} to {-1, 1}</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> X, y</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>X, y <span class="op">=</span> perceptron_data()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Lets just Visualize the data below</p>
-<div id="cell-4" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_data(X, y):</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    y_plot <span class="op">=</span> (y <span class="op">&gt;</span> <span class="dv">0</span>).<span class="bu">float</span>()  <span class="co"># Convert back to {0, 1} for coloring</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    plt.scatter(X[:, <span class="dv">0</span>], X[:, <span class="dv">1</span>], c<span class="op">=</span>y_plot)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">"x₁"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"x₂"</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Linearly Separable Data"</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    plt.grid(<span class="va">True</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>plot_data(X, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In this blog post, I implement the perceptron algorithm using PyTorch. I experiment with linear boundaries that separate two classes in a dataset, as well as cases where a clear separation does not exist. My implementation includes a LinearModel class for basic operations (computing scores and predictions) and a Perceptron subclass that defines the loss (misclassification rate) and gradient update. The algorithm updates its weight vector whenever a data point is misclassified. Additionally, I use visualization functions to display the training data and, for 2D cases, both the decision boundary and the evolution of the loss over time.</p>
+</section>
+<section id="walk-through-of-grad-function" class="level2">
+<h2 class="anchored" data-anchor-id="walk-through-of-grad-function">Walk through of Grad function</h2>
+<p>The grad() function in my implementation is responsible for computing the weight update for a single example. So what i did was:</p>
+<ul>
+<li><p>First, I made sure the data point X is in the right shape. If it came in as a row (1, p), I turned it into a 1D vector (p,).</p></li>
+<li><p>Then I checked if the label y is in {-1, 1}. If it wasnt, I converted it using y_mod = 2 * y - 1.</p></li>
+<li><p>I calculated the score by taking the dot product of the weights and the input (s = w • x). This score tells us how far the point is from the decision boundary.</p></li>
+<li><p>If s * y_mod is less than 0, that means the point is misclassified, so I returned the gradient as -y_mod * X. This will move the weights in the right direction.</p></li>
+<li><p>If the point was classified correctly, I just returned a zero vector (so there would be no update needed).</p></li>
+</ul>
+<p>This matches the perceptron update rule taht if a point is wrong, we update the weights with (2y - 1) * x. Lets now perfom some experiments to check our implementation. Before that, teh code below does a simple check to see if our implementation is working by creating 2d data and perfroms the training and prints our loss after our update step.</p>
+<div id="cell-3" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> perceptron <span class="im">import</span> Perceptron, PerceptronOptimizer, perceptron_data, plot_perceptron_data</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate the 2D data.</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>X, y <span class="op">=</span> perceptron_data(n_points<span class="op">=</span><span class="dv">300</span>, noise<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the training data.</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">6</span>))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>plot_perceptron_data(X, y, ax)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Perceptron Training Data"</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a perceptron and an optimizer.</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> Perceptron()</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>opt <span class="op">=</span> PerceptronOptimizer(p)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> opt.step(X[<span class="dv">0</span>:<span class="dv">1</span>], y[<span class="dv">0</span>])  <span class="co"># update using a single data point.</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Loss after one step:"</span>, loss.item())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -250,67 +255,126 @@ background-size: cover;
 </figure>
 </div>
 </div>
-</div>
-</section>
-<section id="train-using-the-perceptron-optimizer-minimal-training-loop" class="level2">
-<h2 class="anchored" data-anchor-id="train-using-the-perceptron-optimizer-minimal-training-loop">Train Using the Perceptron Optimizer (Minimal Training Loop)</h2>
-<div id="cell-6" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> perceptron <span class="im">import</span> Perceptron, PerceptronOptimizer</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Perceptron()</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>opt <span class="op">=</span> PerceptronOptimizer(model)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>losses <span class="op">=</span> []</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>epochs <span class="op">=</span> <span class="dv">10</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(X.shape[<span class="dv">0</span>]):</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        x_i <span class="op">=</span> X[i].unsqueeze(<span class="dv">0</span>)  <span class="co"># we make sure x_i is 2D tensor</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        y_i <span class="op">=</span> y[i] <span class="co"># y_i is 1D tensor</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        opt.step(x_i, y_i)</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Evaluate total loss after each epoch</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> model.loss(X, y)</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Epoch </span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">: loss = </span><span class="sc">{</span>loss<span class="sc">.</span>item()<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    losses.append(loss.item())</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch 1: loss = 0.0000
-Epoch 2: loss = 0.0000
-Epoch 3: loss = 0.0000
-Epoch 4: loss = 0.0000
-Epoch 5: loss = 0.0000
-Epoch 6: loss = 0.0000
-Epoch 7: loss = 0.0000
-Epoch 8: loss = 0.0000
-Epoch 9: loss = 0.0000
-Epoch 10: loss = 0.0000</code></pre>
+<pre><code>Loss after one step: 1.0</code></pre>
 </div>
 </div>
 </section>
-<section id="expirements" class="level1">
-<h1>Expirements</h1>
-<p>Using ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍2d ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍data ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍like ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍the ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍data ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍</p>
-<div id="cell-8" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_blobs</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate two separable clusters</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>X_np, y_np <span class="op">=</span> make_blobs(n_samples<span class="op">=</span><span class="dv">100</span>, n_features<span class="op">=</span><span class="dv">2</span>, centers<span class="op">=</span>[[<span class="op">-</span><span class="fl">1.5</span>, <span class="op">-</span><span class="fl">1.5</span>], [<span class="fl">1.5</span>, <span class="fl">1.5</span>]], random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to PyTorch tensors</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.tensor(X_np, dtype<span class="op">=</span>torch.float32)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> torch.tensor(y_np, dtype<span class="op">=</span>torch.float32)  <span class="co"># Note: still in {0,1}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="experiment-1-perceptron-training-on-2d-data" class="level2">
+<h2 class="anchored" data-anchor-id="experiment-1-perceptron-training-on-2d-data">Experiment 1: Perceptron Training on 2D data</h2>
+<p>In the experiment below, I use the perceptron algorithm to classify 2D data that is linearly separable.</p>
+<ul>
+<li><p>We first generate 2D data using <code>perceptron_data()</code>, which creates two clearly separated classes and adds a bias column.</p></li>
+<li><p>We next initialize a <code>Perceptron</code> model and an optimizer. For each iteration we calculate the current loss (misclassification rate), randomly select a single data point and if the model misclassifies it, we update the weights using the Perceptron rule.</p></li>
+<li><p>We repeat this until the model achieves zero loss or we reach the maximum number of iterations.</p></li>
+</ul>
+<div id="cell-5" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Experiment 1: 2D Data (Linearly Separable</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>X2, y2 <span class="op">=</span> perceptron_data(n_points<span class="op">=</span><span class="dv">300</span>, noise<span class="op">=</span><span class="fl">0.2</span>)  <span class="co">#generate 2d data </span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> Perceptron()</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>opt2 <span class="op">=</span> PerceptronOptimizer(p2)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>loss_vec <span class="op">=</span> []</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> X2.size(<span class="dv">0</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>max_iter <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(max_iter):</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> p2.loss(X2, y2)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    loss_vec.append(loss.item())</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> loss.item() <span class="op">==</span> <span class="dv">0</span>: <span class="cf">break</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> torch.randint(n, (<span class="dv">1</span>,))</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    opt2.step(X2[[i], :], y2[i])</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#Plot decision boundary on 2D data:</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> p2.w  <span class="co"># final weight vector: [w1, w2, bias]</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>x1_vals <span class="op">=</span> torch.linspace(X2[:,<span class="dv">0</span>].<span class="bu">min</span>()<span class="op">-</span><span class="fl">0.5</span>, X2[:,<span class="dv">0</span>].<span class="bu">max</span>()<span class="op">+</span><span class="fl">0.5</span>, <span class="dv">100</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>x2_vals <span class="op">=</span> <span class="op">-</span>(w[<span class="dv">0</span>]<span class="op">*</span>x1_vals <span class="op">+</span> w[<span class="dv">2</span>]) <span class="op">/</span> w[<span class="dv">1</span>]  <span class="co"># boundary: w1*x1 + w2*x2 + bias = 0</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">6</span>))</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>plt.scatter(X2[:,<span class="dv">0</span>], X2[:,<span class="dv">1</span>], c<span class="op">=</span>y2)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>plt.plot(x1_vals, x2_vals,  linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"x1"</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"x2"</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Decision Boundary on 2D Data"</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+</figure>
 </div>
-<p>Plotting our data</p>
-<div id="cell-10" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the data</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">5</span>))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(X_np[:, <span class="dv">0</span>], X_np[:, <span class="dv">1</span>], c<span class="op">=</span>y_np)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"feature X"</span>)</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Feature Y"</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"2D Data that is Linearly Separable "</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>Visualizing the loss evolution</p>
+<div id="cell-7" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#plot loss evolution</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">4</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.plot(loss_vec, marker<span class="op">=</span><span class="st">'o'</span>, color<span class="op">=</span><span class="st">'slategrey'</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Iteration"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Loss"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Loss Evolution (2D Data)"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>After training we plot the <strong>loss vs.&nbsp;iteration</strong> to show how the loss decreases as the model learns adn we also plot the final <strong>decision boundary</strong> over the 2D data. The red and blue dots show the two classes and the straight line separates them. This shows that the perceptron can successfully find a separating line when the data is linearly separable.</p>
+</section>
+<section id="runtime-complexity-of-a-single-perceptron-iteration" class="level2">
+<h2 class="anchored" data-anchor-id="runtime-complexity-of-a-single-perceptron-iteration">Runtime Complexity of a Single Perceptron Iteration</h2>
+<p>In each iteration of perceptron training, we:</p>
+<ul>
+<li>Compute a dot product between the weight vector <code>w</code> and a single input example <code>x</code>. If <code>x</code> has <code>p</code> features, this takes <strong>O(p)</strong> time.</li>
+<li>If the example is misclassified, we compute the gradient and update the weights — this also takes <strong>O(p)</strong> time.</li>
+</ul>
+<p>So overall, a <strong>single iteration takes O(p) time</strong>. It doesn’t depend on the total number of data points <code>n</code>, because we only update using one randomly selected point per iteration.</p>
+<p>Looking at the <strong>Loss Evolution</strong> graph above, we can also see that the model usually improves quickly (loss drops) and then flattens out. Even if a spike happens, it corrects quickly with just a couple more iterations. This shows that each iteration is efficient and contributes quickly to learning — especially when the data is linearly separable like in our 2D example.</p>
+</section>
+<section id="experiment-2-perceptron-training-on-high-dimensional-data-3-features" class="level2">
+<h2 class="anchored" data-anchor-id="experiment-2-perceptron-training-on-high-dimensional-data-3-features">Experiment 2: Perceptron Training on High-Dimensional Data (3 Features)</h2>
+<p>In this experiment, I train the perceptron algorithm on a dataset with <strong>5 features</strong> instead of just 2.</p>
+<ul>
+<li>We generate high-dimensional data using <code>high_dim_data()</code>, which creates 5-dimensional data points (4 random features plus a constant column for bias). The two classes are linearly separable, but harder to visualize.</li>
+<li>We initialize a <code>Perceptron</code> model and an optimizer. As before, in each iteration we:
+<ul>
+<li>calculate the current loss,</li>
+<li>randomly select a data point, and</li>
+<li>apply the perceptron update rule if that point is misclassified.</li>
+</ul></li>
+<li>We keep updating until the loss reaches zero or we hit the maximum number of iterations.</li>
+</ul>
+<div id="cell-10" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Experiment 2: High-Dimensional Data (5 Features) </span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> high_dim_data(n_points<span class="op">=</span><span class="dv">300</span>, noise<span class="op">=</span><span class="fl">0.2</span>, p_dims<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate data with p_dims-1 features and append constant column.</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> torch.arange(n_points) <span class="op">&gt;=</span> n_points<span class="op">//</span><span class="dv">2</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> y[:, <span class="va">None</span>].<span class="bu">float</span>() <span class="op">+</span> torch.normal(<span class="fl">0.0</span>, noise, size<span class="op">=</span>(n_points, p_dims<span class="op">-</span><span class="dv">1</span>))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> torch.cat((X, torch.ones((n_points, <span class="dv">1</span>))), <span class="dv">1</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> y.<span class="bu">float</span>() <span class="op">-</span> <span class="dv">1</span>  <span class="co"># convert targets to {-1, 1}</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> X, y</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>X5, y5 <span class="op">=</span> high_dim_data(n_points<span class="op">=</span><span class="dv">300</span>, noise<span class="op">=</span><span class="fl">0.2</span>, p_dims<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>p5 <span class="op">=</span> Perceptron()</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>opt5 <span class="op">=</span> PerceptronOptimizer(p5)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>loss_vec_hd <span class="op">=</span> []</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>n_hd <span class="op">=</span> X5.size(<span class="dv">0</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(max_iter):</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> p5.loss(X5, y5)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    loss_vec_hd.append(loss.item())</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> loss.item() <span class="op">==</span> <span class="dv">0</span>: <span class="cf">break</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> torch.randint(n_hd, (<span class="dv">1</span>,))</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    opt5.step(X5[[i], :], y5[i])</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot loss evolution for high-dimensional data:</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">4</span>))</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>plt.plot(loss_vec_hd, marker<span class="op">=</span><span class="st">'o'</span>, color<span class="op">=</span><span class="st">'teal'</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Iteration"</span>)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Loss"</span>)</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Loss Evolution (High-Dimensional Data)"</span>)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -319,53 +383,82 @@ Epoch 10: loss = 0.0000</code></pre>
 </div>
 </div>
 </div>
-<p>Training loops and plotting loss on updates</p>
-<div id="cell-12" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> perceptron <span class="im">import</span> Perceptron, PerceptronOptimizer</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">1</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> Perceptron()</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>opt <span class="op">=</span> PerceptronOptimizer(p)</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>loss_vec <span class="op">=</span> []</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>max_steps <span class="op">=</span> <span class="dv">1000</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> X.shape[<span class="dv">0</span>]</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(max_steps):</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> torch.randint(n, size<span class="op">=</span>(<span class="dv">1</span>,))</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    x_i <span class="op">=</span> X[i]</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    y_i <span class="op">=</span> y[i]</span>
+<p>Since the data lives in more than 2 dimensions, we cannot directly plot the decision boundary. But we still visualize the loss over time to see how the model is learning and the graph above shows that the perceptron is still able to learn from high-dimensional data. The loss decreases quickly, though it fluctuates a bit more than in the 2D case — this is makes sense, because higher dimensions can make it harder to find a good separating boundary.</p>
+</section>
+<section id="runtime-complexity-of-a-single-perceptron-iteration-high-dimensional-case" class="level2">
+<h2 class="anchored" data-anchor-id="runtime-complexity-of-a-single-perceptron-iteration-high-dimensional-case">Runtime Complexity of a Single Perceptron Iteration (High-Dimensional Case)</h2>
+<p>Even though the data has more features now, the complexity of each iteration stays the same:</p>
+<ul>
+<li>We compute the dot product <code>w · x</code> where <code>x</code> has <code>p</code> features → this takes O(p) time.</li>
+<li>If the point is misclassified, the gradient computation and weight update also take O(p) time.</li>
+</ul>
+<p>So a single update step still runs in O(p) time. The number of data points <code>n</code> does not affect the time for each step because we’re only using one data point per iteration.</p>
+<p>From the Loss Evolution graph above, we can see that perceptron learns effectively. The drops in loss happen fast, confirming that even in high dimensions, each iteration helps the model improve quickly — as long as the data is linearly separable.</p>
+<p>Experiment 3: Perceptron on 2D Data that is not linearly Separable</p>
+<div id="cell-13" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate nonseparable 2D data by increasing noise.</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>X_ns, y_ns <span class="op">=</span> perceptron_data(n_points<span class="op">=</span><span class="dv">300</span>, noise<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>p_ns <span class="op">=</span> Perceptron()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>opt_ns <span class="op">=</span> PerceptronOptimizer(p_ns)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>loss_vec <span class="op">=</span> []</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> X_ns.size(<span class="dv">0</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>max_iter <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Training loop: update on a random point each iteration.</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(max_iter):</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> p_ns.loss(X_ns, y_ns).item()</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    loss_vec.append(loss)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If by chance loss becomes 0, we could break—but for nonseparable data, it won't.</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> torch.randint(n, (<span class="dv">1</span>,))</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    opt_ns.step(X_ns[[i], :], y_ns[i])</span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># check individual point loss</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    single_loss <span class="op">=</span> p.loss(x_i, y_i).item()</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> single_loss <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        opt.step(x_i, y_i)</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        total_loss <span class="op">=</span> p.loss(X, y).item()</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>        loss_vec.append(total_loss)</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p.loss(X, y).item() <span class="op">==</span> <span class="dv">0</span>:</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>visualizing the loss</p>
-<div id="cell-14" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plt.plot(loss_vec, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(<span class="bu">range</span>(<span class="bu">len</span>(loss_vec)), loss_vec, color<span class="op">=</span><span class="st">"slategrey"</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Perceptron Iteration (Updates Only)"</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Loss"</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Loss vs Perceptron Updates (Linearly Separable Data)"</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the data and the final decision boundary.</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> p_ns.w  <span class="co"># final weight vector [w1, w2, bias]</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>x_vals <span class="op">=</span> torch.linspace(X_ns[:,<span class="dv">0</span>].<span class="bu">min</span>()<span class="op">-</span><span class="fl">0.5</span>, X_ns[:,<span class="dv">0</span>].<span class="bu">max</span>()<span class="op">+</span><span class="fl">0.5</span>, <span class="dv">100</span>)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>y_vals <span class="op">=</span> <span class="op">-</span>(w[<span class="dv">0</span>]<span class="op">*</span>x_vals <span class="op">+</span> w[<span class="dv">2</span>]) <span class="op">/</span> w[<span class="dv">1</span>]  <span class="co"># decision boundary: w1*x + w2*y + bias = 0</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">6</span>))</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.gca()</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>plot_perceptron_data(X_ns, y_ns, ax)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>ax.plot(x_vals, y_vals, linewidth<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"x1"</span>)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"x2"</span>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Final Decision Boundary (Nonseparable Data)"</span>)</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot evolution of loss.</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>,<span class="dv">4</span>))</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>plt.plot(loss_vec, marker<span class="op">=</span><span class="st">'o'</span>, markersize<span class="op">=</span><span class="dv">3</span>, color<span class="op">=</span><span class="st">'slategrey'</span>)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Iteration"</span>)</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Loss"</span>)</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Loss Evolution (Nonseparable Data)"</span>)</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="index_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-7-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>In our experiment above , I tested the perceptron algorithm on 2D data that is not linearly separable by increasing the noise when generating data with <code>perceptron_data()</code>.</p>
+<ul>
+<li><p>We use a noise level of <code>0.6</code> which causes the two classes to overlap significantly. This makes it impossible to draw a perfect straight line that separates all the points.</p></li>
+<li><p>We then train the perceptron for up to 1000 iterations. Like before, we calculate the loss at each step and perform updates on a randomly chosen data point.</p></li>
+<li><p>After training, we plot the loss over time and the final decision boundary. Since the data is not linearly separable, the loss never reaches zero. The model keeps fluctuating as it tries to fit the noisy data.</p></li>
+</ul>
+<p>The plot of the final decision boundary shows that the perceptron still finds a line that roughly splits the two classes, but some red and blue points are still on the wrong side. The loss curve also shows this as it goes around up and down and never stays flat like it did in the previous experiments. This shows a key limitation of the basic perceptron that it only works well when the data is linearly separable</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>In this blog post, I learnt to build implement the Perceptron algorithm using PyTorch. I started with linearly separable data and showed that the perceptron can successfully learn a straight-line boundary that separates the two classes. Then, I tried the algorithm on higher-dimensional data and saw that it still learns well. Finally, I tested it on noisy, nonseparable data and noticed that the perceptron could not find a perfect boundary, and the loss never reached zero. These experiments show that the perceptron works best when the data is linearly separable. It’s fast and simple, but has limitations when data is noisy or can’t be split with a straight line.</p>
 
 
 </section>
