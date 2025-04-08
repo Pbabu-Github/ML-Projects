@@ -457,9 +457,112 @@ background-size: cover;
 </ul>
 <p>The plot of the final decision boundary shows that the perceptron still finds a line that roughly splits the two classes, but some red and blue points are still on the wrong side. The loss curve also shows this as it goes around up and down and never stays flat like it did in the previous experiments. This shows a key limitation of the basic perceptron that it only works well when the data is linearly separable</p>
 </section>
+<section id="implementing-minibatch-perceptron" class="level2">
+<h2 class="anchored" data-anchor-id="implementing-minibatch-perceptron">Implementing Minibatch Perceptron</h2>
+</section>
+<section id="walk-through-of-grad-function-in-minibatch-implementation" class="level2">
+<h2 class="anchored" data-anchor-id="walk-through-of-grad-function-in-minibatch-implementation">Walk through of grad function in Minibatch implementation</h2>
+<p>The grad() function in my minibatch implementation is responsible for computing the weight updates for multiple examples at once (a minibatch). I did this by</p>
+<ul>
+<li><p>First, I made sure the labels (<code>y</code>) were in the set {-1, 1}. If they weren’t, I converted them using:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>y_mod <span class="op">=</span> torch.where((y <span class="op">==</span> <span class="dv">1</span>) <span class="op">|</span> (y <span class="op">==</span> <span class="op">-</span><span class="dv">1</span>), y, <span class="dv">2</span> <span class="op">*</span> y <span class="op">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>Then, I calculated the scores (<code>s</code>) for the entire minibatch simultaneously by multiplying the feature matrix (<code>X</code>) by the weight vector (<code>w</code>):</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> X <span class="op">@</span> <span class="va">self</span>.w</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>After that, I checked which data points were misclassified by seeing where <code>s * y_mod</code> was less than 0.</p></li>
+<li><p>If there were any misclassified points, I computed the gradient by averaging the updates from all misclassified points:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>grad <span class="op">=</span> <span class="op">-</span>(y_mod[misclassified, <span class="va">None</span>] <span class="op">*</span> X[misclassified]).mean(dim<span class="op">=</span><span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p>If all points were classified correctly, I simply returned a zero vector (since no update would be needed).</p></li>
+</ul>
+<p>This matches the minibatch perceptron update rule: if multiple points are wrong, we average their updates together to adjust our weights efficiently. Let’s now perform some experiments with different batch sizes to check how this implementation performs.</p>
+<p>In the code below, I implemented the Minibatch Perceptron algorithm to examine how varying the batch size (k) impacts the training process and convergence behavior.</p>
+<p>The function minibatch(batch_size) performs training on randomly selected subsets (minibatches) of data points. Each minibatch is used to update the perceptron weights according to the perceptron learning rule.</p>
+<p>Within the training loop, the loss is calculated after every update and we store it in the loss_history. If the loss reaches zero (which would indicate perfect classification), the training stops early.</p>
+<p>We then by visualize the evolution of the loss, showing how quickly and effectively the perceptron learns for each specified minibatch size.</p>
+<p>I will be calling this function with various batch sizes (k=1, k=10, k=n) to show how the perceptron’s learning rate differ across these scenarios:</p>
+<div id="cell-16" class="cell" data-execution_count="99">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> perceptron <span class="im">import</span> Perceptron, PerceptronOptimizer, perceptron_data</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate data</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>X, y <span class="op">=</span> perceptron_data(n_points<span class="op">=</span><span class="dv">300</span>, noise<span class="op">=</span><span class="fl">0.2</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a perceptron and an optimizer</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Perceptron()</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> PerceptronOptimizer(model)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>max_iter <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>alpha <span class="op">=</span> <span class="fl">0.1</span>  <span class="co"># Learning rate</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> minibatch(batch_size):</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Loss tracking</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    loss_history <span class="op">=</span> []</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(max_iter):</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>        indices <span class="op">=</span> torch.randperm(X.size(<span class="dv">0</span>))[:batch_size]  <span class="co"># random minibatch selection</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>        X_batch, y_batch <span class="op">=</span> X[indices], y[indices]</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> optimizer.step(X_batch, y_batch, alpha)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>        loss_history.append(loss.item()) <span class="co"># adding loss to history</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># we stop if loss reaches zero (perfect separation)</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> loss.item() <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot loss evolution</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>    plt.plot(loss_history, marker<span class="op">=</span><span class="st">'o'</span>)</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">"Iteration"</span>)</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"Loss"</span>)</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f"Loss Evolution (Minibatch size: </span><span class="sc">{</span>batch_size<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="experiment-minibatch-size-1" class="level3">
+<h3 class="anchored" data-anchor-id="experiment-minibatch-size-1">Experiment: Minibatch Size = 1</h3>
+<p>In this experiment, I set the minibatch size to 1, which is the same as the standard perceptron update rule (one point at a time). As shown in the plot, the model quickly converges — it only takes two iterations for the loss to drop from 1.0 to 0.0. This is because when the data is linearly separable, since each misclassified point directly contributes to updating the weights. It confirms that this minibatch implementation works just like the regular perceptron when <code>k = 1</code>.</p>
+<div id="cell-18" class="cell" data-execution_count="100">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>minibatch(<span class="dv">1</span>)<span class="co">#when batch size is 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="experiment-minibatch-size-10" class="level3">
+<h3 class="anchored" data-anchor-id="experiment-minibatch-size-10">Experiment: Minibatch Size = 10</h3>
+<p>In this experiment, I set the minibatch size to 10. The perceptron model updates its weights using 10 data points at a time instead of just one. As shown in the graph, the loss starts high and fluctuates for the first few steps, but overall it keeps going down. Around the 10th iteration, the model reaches zero loss, which means it has learned to classify the data correctly. This shows that using a small batch size still works well and the model is able to find a good separating line.</p>
+<div id="cell-20" class="cell" data-execution_count="102">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>minibatch(<span class="dv">10</span>)<span class="co"># batch size 10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="experiment-minibatch-size-n" class="level3">
+<h3 class="anchored" data-anchor-id="experiment-minibatch-size-n">Experiment: Minibatch Size = n</h3>
+<p>In this experiment, I used a minibatch size of 300 because we have 300 points, which means the perceptron updates its weights using the entire dataset at each step. As shown in the plot, the loss starts off high and stays flat for a few steps, but then it begins to decrease smoothly. By the 12th iteration, the loss reaches almost zero. This shows that even when using the whole dataset at once, the perceptron is still able to learn and improve — just a bit more gradually. The updates are more stable and less noisy compared to smaller batch sizes.</p>
+<div id="cell-22" class="cell" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>minibatch(<span class="dv">300</span>)<span class="co"># batch size 300 which is the number of points</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>In this blog post, I learnt to build implement the Perceptron algorithm using PyTorch. I started with linearly separable data and showed that the perceptron can successfully learn a straight-line boundary that separates the two classes. Then, I tried the algorithm on higher-dimensional data and saw that it still learns well. Finally, I tested it on noisy, nonseparable data and noticed that the perceptron could not find a perfect boundary, and the loss never reached zero. These experiments show that the perceptron works best when the data is linearly separable. It’s fast and simple, but has limitations when data is noisy or can’t be split with a straight line.</p>
+<p>In this blog post, I learned to build and implement the Perceptron algorithm using PyTorch. I started with linearly separable data and showed that the perceptron can successfully learn a straight-line boundary that separates the two classes. Then, I tried the algorithm on higher-dimensional data and saw that it still learns well. Finally, I tested it on noisy, nonseparable data and noticed that the perceptron could not find a perfect boundary, and the loss never reached zero.</p>
+<p>These experiments show that the perceptron works best when the data is linearly separable. It’s fast and simple, but has limitations when data is noisy or can’t be split with a straight line.</p>
+<p>I also learnt how the perceptron behaves under different minibatch sizes. With small batches (like 1 or 10), the model updates quickly but sometimes with more noise. Using the entire dataset as a batch (size 300) made the updates smoother and more stable, though slightly slower. Overall, these experiments helped me understand how minibatch size affects convergence and learning behavior in perceptron training.</p>
 
 
 </section>
