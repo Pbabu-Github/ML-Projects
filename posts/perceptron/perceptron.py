@@ -58,30 +58,54 @@ class Perceptron(LinearModel):
             y_mod = 2 * y - 1
         return ((s * y_mod) <= 0).float().mean()
 
-    def grad(self, X, y):
+    # old perceptron gradient function
+    # def grad(self, X, y):
+    #     """
+    #     calculate the perceptron gradient for a single example.
+    #     If the data point is misclassified (s * y < 0), then the gradient is -y * x orelse the gradient would just be a zero vector.
+        
+    #     argument:
+    #         X, torch.Tensor: Single feature vector of shape (p,) or (1, p).
+    #         y, torch.Tensor or scalar: Single label in {0, 1} or {-1, 1}.
+    #     returns:
+    #         grad, torch.Tensor: Gradient vector for weight update.
+    #     """
+    #     # we make sure that X is a 1D tensor
+    #     if len(X.shape) == 2:
+    #         X = X.squeeze(0)
+    #     # Convert y to {-1, 1} if we have to
+    #     y_mod = y if y in (-1, 1) else 2 * y - 1
+
+    #     #calculate the score for the single example
+    #     s = torch.dot(self.w, X)
+    #     if s * y_mod < 0:
+    #         return -y_mod * X
+    #     else:
+    #         return torch.zeros_like(self.w) # we dont need to update if it is classified correctly
+    def grad(self,X, y):
         """
-        calculate the perceptron gradient for a single example.
-        If the data point is misclassified (s * y < 0), then the gradient is -y * x orelse the gradient would just be a zero vector.
+        Calculate the perceptron gradient for a mini-batch of examples.
+        The gradient is the average of the gradients for each misclassified example.
         
         argument:
-            X, torch.Tensor: Single feature vector of shape (p,) or (1, p).
-            y, torch.Tensor or scalar: Single label in {0, 1} or {-1, 1}.
+            X, torch.Tensor: Feature matrix of shape (n, p).
+            y, torch.Tensor: Target vector with shape (n,). The possible labels are {0, 1} or {-1, 1}.
         returns:
             grad, torch.Tensor: Gradient vector for weight update.
         """
-        # we make sure that X is a 1D tensor
-        if len(X.shape) == 2:
-            X = X.squeeze(0)
         # Convert y to {-1, 1} if we have to
-        y_mod = y if y in (-1, 1) else 2 * y - 1
-
-        #calculate the score for the single example
-        s = torch.dot(self.w, X)
-        if s * y_mod < 0:
-            return -y_mod * X
+        y_mod = torch.where((y == 1) | (y == -1), y, 2 * y - 1)
+        # Calculate the score for each example
+        s = X @ self.w
+        # we find teh misclassidied points
+        misclassified = (s * y_mod) < 0
+        # calculate the gradient by adding all the misclassified points
+        if misclassified.any():
+         grad = -(y_mod[misclassified, None] * X[misclassified]).mean(dim=0)
         else:
-            return torch.zeros_like(self.w) # we dont need to update if it is classified correctly
-
+            grad = torch.zeros_like(self.w)
+        return grad
+    
 
 class PerceptronOptimizer:
     def __init__(self, model):
@@ -91,21 +115,24 @@ class PerceptronOptimizer:
         """
         self.model = model 
 
-    def step(self, X, y):
+    def step(self, X, y, alpha=1.0):
         """
-        Perform a step of the Perceptron learning rule:
+        initaially we did Perform a step of the Perceptron learning rule:
+        but now we do teh mimbatch update
+
         calculate the current loss, then we caluclate the gradient, and then we update the weights.
         
         argument:
             X, torch.Tensor: Feature matrix (or single example) with shape (n, p) or (1, p).
             y, torch.Tensor: Target vector (or single label) with shape (n,) or scalar.
+            alpha (float): Learning rate.
         
         Returns:
             loss, torch.Tensor: The misclassification rate after the update.
         """
         loss = self.model.loss(X, y)
         grad = self.model.grad(X, y)
-        self.model.w = self.model.w - grad
+        self.model.w -= alpha * grad
         return loss
 
 
