@@ -558,6 +558,10 @@ background-size: cover;
 </div>
 </section>
 </section>
+<section id="runtime-complexity-of-minibatch-implementation" class="level2">
+<h2 class="anchored" data-anchor-id="runtime-complexity-of-minibatch-implementation">Runtime Complexity of Minibatch implementation</h2>
+<p>In my minibatch perceptron implementation, each iteration takes time based on how many points are in the batch and how many features each point has. If the batch has <code>k</code> points and each point has <code>p</code> features, then the runtime is O(kp). This means the more features or bigger the batch, the it will take longer for each update to happen.</p>
+</section>
 <section id="conclusion" class="level2">
 <h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
 <p>In this blog post, I learned to build and implement the Perceptron algorithm using PyTorch. I started with linearly separable data and showed that the perceptron can successfully learn a straight-line boundary that separates the two classes. Then, I tried the algorithm on higher-dimensional data and saw that it still learns well. Finally, I tested it on noisy, nonseparable data and noticed that the perceptron could not find a perfect boundary, and the loss never reached zero.</p>
