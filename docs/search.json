@@ -788,7 +788,7 @@
     "href": "posts/implementing logistic regression/index.html",
     "title": "Implementing Logistic Regression",
     "section": "",
-    "text": "File of Perceptron.py https://github.com/Pbabu-Github/csci-0451/blob/main/posts/perceptron/perceptron.py\n%load_ext autoreload\n%autoreload 2\nfrom logistic import LogisticRegression, GradientDescentOptimizer"
+    "text": "%load_ext autoreload\n%autoreload 2\nfrom logistic import LogisticRegression, GradientDescentOptimizer\nFile of logistic.py"
   },
   {
     "objectID": "posts/implementing logistic regression/index.html#abstract",
