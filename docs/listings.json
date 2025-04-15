@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/implementing logistic regression/index.html",
       "/posts/perceptron/index.html",
       "/posts/discecting_racial_bias_algo/index.html",
       "/posts/Design and Impact of Automated Decision Systems/index.html",
