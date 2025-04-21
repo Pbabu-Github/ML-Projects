@@ -53,7 +53,7 @@
     "href": "index.html",
     "title": "My Awesome CSCI 0451 Blog",
     "section": "",
-    "text": "Implementing Logistic Regression\n\n\n\n\n\nA blog post about Implementing Logistic Regression.\n\n\n\n\n\nApr 8, 2025\n\n\nPB\n\n\n\n\n\n\n\n\n\n\n\n\nImplementing Perceptron\n\n\n\n\n\nA blog post about Implementing Perceptron and some experiments with it.\n\n\n\n\n\nApr 2, 2025\n\n\nPB\n\n\n\n\n\n\n\n\n\n\n\n\nDissecting racial bias in an algorithm used to manage the health of populations\n\n\n\n\n\nA replication study of Obermeyer et al. (2019), exploring racial bias in healthcare cost algorithms and its impact on resource allocation.\n\n\n\n\n\nMar 2, 2025\n\n\nPB\n\n\n\n\n\n\n\n\n\n\n\n\nDesign and Impact of Automated Decision Systems\n\n\n\n\n\nA blog post about Design and Impact of Automated Decision Systems\n\n\n\n\n\nFeb 27, 2025\n\n\nPB\n\n\n\n\n\n\n\n\n\n\n\n\nLimits of the Quantitative Approach to Bias and Fairness\n\n\n\n\n\nA blog post on Limits of the Quantitative Approach to Bias and Fairness.\n\n\n\n\n\nFeb 20, 2025\n\n\nPB\n\n\n\n\n\n\n\n\n\n\n\n\nClassifying Palmer Penguins\n\n\n\n\n\nA blog post about classifying penguins with machine learning using logistic Regression.\n\n\n\n\n\nFeb 20, 2025\n\n\nPB\n\n\n\n\n\n\n\n\n\n\n\n\nAuditing Bias in Machine Learning Models\n\n\n\n\n\nA blog post about auditing bias in machine learning models.\n\n\n\n\n\nFeb 20, 2025\n\n\nPB\n\n\n\n\n\n\nNo matching items"
+    "text": "Overfitting, Overparameterization, and Double Descent\n\n\n\n\n\nA blog post about cOverfitting, Overparameterization, and Double Descent\n\n\n\n\n\nApr 20, 2025\n\n\nPB\n\n\n\n\n\n\n\n\n\n\n\n\nImplementing Logistic Regression\n\n\n\n\n\nA blog post about Implementing Logistic Regression.\n\n\n\n\n\nApr 8, 2025\n\n\nPB\n\n\n\n\n\n\n\n\n\n\n\n\nImplementing Perceptron\n\n\n\n\n\nA blog post about Implementing Perceptron and some experiments with it.\n\n\n\n\n\nApr 2, 2025\n\n\nPB\n\n\n\n\n\n\n\n\n\n\n\n\nDissecting racial bias in an algorithm used to manage the health of populations\n\n\n\n\n\nA replication study of Obermeyer et al. (2019), exploring racial bias in healthcare cost algorithms and its impact on resource allocation.\n\n\n\n\n\nMar 2, 2025\n\n\nPB\n\n\n\n\n\n\n\n\n\n\n\n\nDesign and Impact of Automated Decision Systems\n\n\n\n\n\nA blog post about Design and Impact of Automated Decision Systems\n\n\n\n\n\nFeb 27, 2025\n\n\nPB\n\n\n\n\n\n\n\n\n\n\n\n\nLimits of the Quantitative Approach to Bias and Fairness\n\n\n\n\n\nA blog post on Limits of the Quantitative Approach to Bias and Fairness.\n\n\n\n\n\nFeb 20, 2025\n\n\nPB\n\n\n\n\n\n\n\n\n\n\n\n\nClassifying Palmer Penguins\n\n\n\n\n\nA blog post about classifying penguins with machine learning using logistic Regression.\n\n\n\n\n\nFeb 20, 2025\n\n\nPB\n\n\n\n\n\n\n\n\n\n\n\n\nAuditing Bias in Machine Learning Models\n\n\n\n\n\nA blog post about auditing bias in machine learning models.\n\n\n\n\n\nFeb 20, 2025\n\n\nPB\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/example-blog-post/index.html#data-cleaning",
@@ -795,7 +795,7 @@
     "href": "posts/implementing logistic regression/index.html#abstract",
     "title": "Implementing Logistic Regression",
     "section": "Abstract",
-    "text": "Abstract\nIn this blog post, I implemented logistic regression from scratch using PyTorch. I started by generating data to test gradient descent with and without momentum. Then, I created experiments to explore how the model behaves under overfitting conditions. Finally, I trained the model on a real-world dataset (Campus Placement Prediction from Kaggle) and evaluated its performance on training, validation, and test splits. This helped me understand how logistic regression works in practice, both on simple and real datasets."
+    "text": "Abstract\nIn this blog post, I implemented logistic regression from scratch using PyTorch. I started by creating data to test gradient descent with and without momentum. Then, I created experiments to see how the model behaves under overfitting conditions. Finally, I trained the model on a real-world dataset (Campus Placement Prediction from Kaggle) and evaluated its performance on training, validation, and test splits. This helped me understand how logistic regression works in practice, both on simple and real datasets."
   },
   {
     "objectID": "posts/implementing logistic regression/index.html#experiments",
@@ -844,7 +844,7 @@
     "href": "posts/implementing logistic regression/index.html#performance-on-empirical-data",
     "title": "Implementing Logistic Regression",
     "section": "Performance on Empirical Data",
-    "text": "Performance on Empirical Data\nDataset: Campus Placement Prediction\nI used a dataset from Kaggle called Campus Placement Prediction@ben_roshan_2024 . This dataset includes information about students such as:\n\nEducation percentages (high school, college, MBA)\n\nDegree types and specializations\n\nWork experience and test scores\n\nWhether they got placed — this is our target variable\n\nOur goal is to predict whether a student gets a job placement or not using logistic regression.\nFor this empirical experiment, I worked with student profiles and their final placement status (placed or not placed). The features include academic scores, education streams, specialization, work experience, and more.\nOur target variable is status — whether the student was placed (1) or not placed (0). The task is to predict campus placement outcomes based on these features.\n@ben_roshan_2024\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler, OneHotEncoder\nfrom sklearn.compose import ColumnTransformer\nfrom sklearn.pipeline import Pipeline\n\n# Load dataset\ndf = pd.read_csv(\"Campus_Selection.csv\")  # Make sure the file is in your notebook folder\n\n# Drop rows with missing values\ndf.dropna(inplace=True)\n\n# Convert target to binary\ndf['status'] = df['status'].map({'Placed': 1, 'Not Placed': 0})\n\n# Features and target\nX_raw = df.drop('status', axis=1)\ny = df['status'].values"
+    "text": "Performance on Empirical Data\nDataset: Campus Placement Prediction\nI used a dataset from Kaggle called Campus Placement PredictionROSHAN (2024) . This dataset includes information about students such as:\n\nEducation percentages (high school, college, MBA)\n\nDegree types and specializations\n\nWork experience and test scores\n\nWhether they got placed — this is our target variable\n\nOur goal is to predict the outcome of candidate selection during campus placement processes using logistic regression\nFor this empirical experiment, I worked with student profiles and their final placement status (placed or not placed). The features include academic scores, education streams, specialization, work experience, and more.\nOur target variable is status — whether the student was placed (1) or not placed (0). The task is to predict campus placement outcomes based on these features.\nROSHAN (2024)\n\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler, OneHotEncoder\nfrom sklearn.compose import ColumnTransformer\nfrom sklearn.pipeline import Pipeline\n\n# Load dataset\ndf = pd.read_csv(\"Campus_Selection.csv\")  # Make sure the file is in your notebook folder\n\n# Drop rows with missing values\ndf.dropna(inplace=True)\n\n# Convert target to binary\ndf['status'] = df['status'].map({'Placed': 1, 'Not Placed': 0})\n\n# Features and target\nX_raw = df.drop('status', axis=1)\ny = df['status'].values"
   },
   {
     "objectID": "posts/implementing logistic regression/index.html#preprocessing-the-data",
@@ -866,5 +866,19 @@
     "title": "Implementing Logistic Regression",
     "section": "Conclusion",
     "text": "Conclusion\nWhat I learned from this project is how to build a working logistic regression model and train it using gradient descent. I tested the effect of momentum and saw that it helps the model learn faster. I also created an overfitting scenario and saw that a model can do really well on the training data but not on unseen data if it’s overfitted.\nFinally, I applied the model to a real-world dataset and saw that it achieved high training accuracy and reasonable generalization. This whole process helped me understand how preprocessing, training, and different values of beta (momentum) affect the model’s learning and how they impact the loss over time."
+  },
+  {
+    "objectID": "posts/Overfitting, Overparameterization, and Double Descent/index.html",
+    "href": "posts/Overfitting, Overparameterization, and Double Descent/index.html",
+    "title": "Overfitting, Overparameterization, and Double Descent",
+    "section": "",
+    "text": "A blog post about cOverfitting, Overparameterization, and Double Descent"
+  },
+  {
+    "objectID": "posts/Overfitting, Overparameterization, and Double Descent/index.html#abstract",
+    "href": "posts/Overfitting, Overparameterization, and Double Descent/index.html#abstract",
+    "title": "Overfitting, Overparameterization, and Double Descent",
+    "section": "",
+    "text": "A blog post about cOverfitting, Overparameterization, and Double Descent"
   }
 ]

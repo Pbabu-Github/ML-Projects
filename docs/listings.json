@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/Overfitting, Overparameterization, and Double Descent/index.html",
       "/posts/implementing logistic regression/index.html",
       "/posts/perceptron/index.html",
       "/posts/discecting_racial_bias_algo/index.html",

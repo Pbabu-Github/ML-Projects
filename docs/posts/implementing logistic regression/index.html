@@ -57,7 +57,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -217,7 +237,7 @@ background-size: cover;
 <p><a href="https://github.com/Pbabu-Github/csci-0451/blob/main/posts/implementing%20logistic%20regression/logistic.py">File of logistic.py</a></p>
 <section id="abstract" class="level2">
 <h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
-<p>In this blog post, I implemented logistic regression from scratch using PyTorch. I started by generating data to test gradient descent with and without momentum. Then, I created experiments to explore how the model behaves under overfitting conditions. Finally, I trained the model on a real-world dataset (Campus Placement Prediction from Kaggle) and evaluated its performance on training, validation, and test splits. This helped me understand how logistic regression works in practice, both on simple and real datasets.</p>
+<p>In this blog post, I implemented logistic regression from scratch using PyTorch. I started by creating data to test gradient descent with and without momentum. Then, I created experiments to see how the model behaves under overfitting conditions. Finally, I trained the model on a real-world dataset (Campus Placement Prediction from Kaggle) and evaluated its performance on training, validation, and test splits. This helped me understand how logistic regression works in practice, both on simple and real datasets.</p>
 </section>
 <section id="experiments" class="level2">
 <h2 class="anchored" data-anchor-id="experiments">Experiments</h2>
@@ -364,7 +384,7 @@ Test Accuracy: 0.86</code></pre>
 <section id="performance-on-empirical-data" class="level2">
 <h2 class="anchored" data-anchor-id="performance-on-empirical-data">Performance on Empirical Data</h2>
 <p><strong>Dataset:</strong> Campus Placement Prediction</p>
-<p>I used a dataset from Kaggle called <a href="https://www.kaggle.com/datasets/meruvulikith/campus-selection-classification-dataset">Campus Placement Prediction</a><span class="citation" data-cites="ben_roshan_2024">@ben_roshan_2024</span> . This dataset includes information about students such as:</p>
+<p>I used a dataset from Kaggle called <a href="https://www.kaggle.com/datasets/meruvulikith/campus-selection-classification-dataset">Campus Placement Prediction</a><span class="citation" data-cites="ben_roshan_2024">ROSHAN (<a href="#ref-ben_roshan_2024" role="doc-biblioref">2024</a>)</span> . This dataset includes information about students such as:</p>
 <ul>
 <li>Education percentages (high school, college, MBA)<br>
 </li>
@@ -374,10 +394,10 @@ Test Accuracy: 0.86</code></pre>
 </li>
 <li>Whether they got placed — this is our target variable</li>
 </ul>
-<p>Our goal is to predict whether a student gets a job placement or not using logistic regression.</p>
+<p>Our goal is to predict the outcome of candidate selection during campus placement processes using logistic regression</p>
 <p>For this empirical experiment, I worked with student profiles and their final placement status (placed or not placed). The features include academic scores, education streams, specialization, work experience, and more.</p>
 <p>Our target variable is <code>status</code> — whether the student was placed (<code>1</code>) or not placed (<code>0</code>). The task is to predict campus placement outcomes based on these features.</p>
-<p><span class="citation" data-cites="ben_roshan_2024">@ben_roshan_2024</span></p>
+<p><span class="citation" data-cites="ben_roshan_2024">ROSHAN (<a href="#ref-ben_roshan_2024" role="doc-biblioref">2024</a>)</span></p>
 <div id="cell-16" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
@@ -506,9 +526,14 @@ Test Accuracy: 0.74</code></pre>
 <p>Finally, I applied the model to a real-world dataset and saw that it achieved high training accuracy and reasonable generalization. This whole process helped me understand how preprocessing, training, and different values of beta (momentum) affect the model’s learning and how they impact the loss over time.</p>
 
 
+
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-ben_roshan_2024" class="csl-entry" role="listitem">
+ROSHAN, BEN. 2024. <span>“Campus Placement Prediction: Binary Classification.”</span> Kaggle. <a href="https://doi.org/10.34740/KAGGLE/DSV/7635357">https://doi.org/10.34740/KAGGLE/DSV/7635357</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
