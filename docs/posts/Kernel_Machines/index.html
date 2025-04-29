@@ -246,15 +246,17 @@ window.Quarto = {
 </div>
 <section id="abstract" class="level2">
 <h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>In this blog post, I implemented a sparse kernel logistic regression model. This model uses a kernel function to allow logistic regression to learn nonlinear patterns, and it uses <span class="math inline">\(\ell_1\)</span> regularization to make the model sparse by setting many weights to zero.</p>
+<p>I did many experiments to show and learn how the model behaves: I show how a large regularization strength (λ) makes the model sparse, how changing the kernel parameter (γ) affects the decision boundary, and alsohow the model can fit nonlinear data like the <code>make_moons</code> dataset. Finally, I showed an example of overfitting by using a high γ and comparing training and testing performance with ROC curves.</p>
 </section>
 <section id="sparse-kernel-logistic-regression-implementation" class="level2">
 <h2 class="anchored" data-anchor-id="sparse-kernel-logistic-regression-implementation">Sparse Kernel Logistic Regression Implementation</h2>
-<p>For the implementation of my (sparse_kernel_logistic.py)[] where I implemented a custom logistic regression model that works in kernel space instead of feature space. This is different from regular logistic regression because instead of learning a weight vector <span class="math inline">\(w\)</span>, we learn a vector of dual weights <span class="math inline">\(a\)</span> and use a kernel function to compute scores.</p>
+<p>For the implementation of my <a href="https://github.com/Pbabu-Github/csci-0451/blob/main/posts/Kernel_Machines/sparse_kernel_logistic.py">sparse_kernel_logistic.py</a> where I implemented a custom logistic regression model that works in kernel space instead of feature space. This is different from regular logistic regression because instead of learning a weight vector <span class="math inline">\(w\)</span>, we learn a vector of dual weights <span class="math inline">\(a\)</span> and use a kernel function to compute scores.</p>
 <p>In my KernelLogisticRegression class I had the following function:</p>
-<p>Score function: * To predict outputs for new data, the model computes the score [ s = K(X, X_{})^a ] where <span class="math inline">\(K\)</span> is the kernel matrix. This is for the model to make nonlinear decisions.</p>
-<p>Loss function: * The loss combines two parts: - The logistic loss. - An <span class="math inline">\(\ell_1\)</span> regularization penalty on the dual weights <span class="math inline">\(a\)</span> to promote sparsity (make many entries of <span class="math inline">\(a\)</span> exactly zero).</p>
-<p>Gradient function: * I computed the gradient of the total loss, including the gradient of the <span class="math inline">\(\ell_1\)</span> penalty, which is based on the sign of the weights. * This helps us to calculate the gradient descent.</p>
-<p>Fit function: * To train the model, I used basic gradient descent. * During training, I compute the kernel matrix between training points, initialize the dual weights <span class="math inline">\(a\)</span> to zero, and update them step-by-step.</p>
+<p>Score function: * To predict outputs for new data, the model computes the score [ s = K(X, X_{})^a ] where ( K ) is the kernel matrix. This is for the model to make nonlinear decisions too.</p>
+<p>Loss function: * The loss has two parts: - The logistic loss. - An (_1) regularization on the dual weights (a) taht helps sparsity by making many entries of (a) equal to zero.</p>
+<p>Gradient function: * I calculated the gradient of the total loss, including the gradient of the (_1) * This helps us to calculate the gradient descent.</p>
+<p>Fit function: * Function that trained the model by calculating the kernel matrix, initializing ( a = 0 ), and updating ( a ) with gradient descent for many epochs.</p>
 <p>Now lets set up our kernel for our experiments.</p>
 <div id="cell-3" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rbf_kernel(X1, X2, gamma):</span>
@@ -345,6 +347,9 @@ window.Quarto = {
 </div>
 </div>
 <p>We can see in the plot above that our model separates the two classes with a smooth, curved boundary. Only a some of the training points(the ones with black outline) have large influence on the decision and most other points have little or no effect. The RBF kernel helps create a nonlinear boundary that fits pir data well.</p>
+</section>
+<section id="part-a" class="level2">
+<h2 class="anchored" data-anchor-id="part-a">Part A</h2>
 <section id="experiment-1-effect-of-large-λ-sparsity" class="level3">
 <h3 class="anchored" data-anchor-id="experiment-1-effect-of-large-λ-sparsity">Experiment 1: Effect of Large λ (Sparsity)</h3>
 <p>In this experiment, I will show how increasing the regularization strength λ causes many entries of the weight vector <span class="math inline">\(a\)</span> to become exactly zero. This is a feature of sparse models that they only rely on a few “important” training points.</p>
@@ -457,9 +462,75 @@ window.Quarto = {
 </div>
 </div>
 </div>
-
-
 </section>
+</section>
+<section id="part-b" class="level2">
+<h2 class="anchored" data-anchor-id="part-b">Part B</h2>
+<section id="demonstrating-overfitting" class="level3">
+<h3 class="anchored" data-anchor-id="demonstrating-overfitting">Demonstrating Overfitting</h3>
+<p>In our code below we generated two datasets one for training and the other for testing. We then trained our model with a bad Gamma so that we can cause overfitting. By setting our gamma high to somewhere around 5-10 we force the model to overfit.</p>
+<div id="cell-22" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Training data</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>X_train_np, y_train_np <span class="op">=</span> make_moons(n_samples<span class="op">=</span><span class="dv">300</span>, noise<span class="op">=</span><span class="fl">0.4</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> torch.tensor(X_train_np, dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> torch.tensor(y_train_np, dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Testing data</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>X_test_np, y_test_np <span class="op">=</span> make_moons(n_samples<span class="op">=</span><span class="dv">300</span>, noise<span class="op">=</span><span class="fl">0.4</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>X_test <span class="op">=</span> torch.tensor(X_test_np, dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>y_test <span class="op">=</span> torch.tensor(y_test_np, dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">#Training our model</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>KR_overfit <span class="op">=</span> KernelLogisticRegression(rbf_kernel, lam<span class="op">=</span><span class="fl">0.1</span>, gamma<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>KR_overfit.fit(X_train, y_train, m_epochs<span class="op">=</span><span class="dv">500000</span>, lr<span class="op">=</span><span class="fl">0.0001</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now that we have trained our model, we will now evaluate our model and get predictions on teh train and test set.</p>
+</section>
+<section id="plotting-our-roc-curve" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-our-roc-curve">Plotting our ROC curve</h3>
+<p>In our plot The training ROC curve is very close to the top-left (meaning high performance), while the test ROC curve is much lower, indicating poor generalization.</p>
+<p>This large gap between the training and testing performance means our model is overfitting. The model fits the noise in the training data instead of learning a decision boundary that generalizes the new examples/ test data.</p>
+<div id="cell-24" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> roc_curve, auc</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># predicting on the training data and the test data</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>train_scores <span class="op">=</span> torch.sigmoid(KR_overfit.score(X_train)).detach().numpy()</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>test_scores <span class="op">=</span> torch.sigmoid(KR_overfit.score(X_test)).detach().numpy()</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the ROC curves</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>fpr_train, tpr_train, _ <span class="op">=</span> roc_curve(y_train, train_scores)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>fpr_test, tpr_test, _ <span class="op">=</span> roc_curve(y_test, test_scores)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot ROC curves</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>plt.figure()</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>plt.plot(fpr_train, tpr_train, label<span class="op">=</span><span class="ss">f"Train ROC (AUC = </span><span class="sc">{</span>auc(fpr_train, tpr_train)<span class="sc">:.2f}</span><span class="ss">)"</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>plt.plot(fpr_test, tpr_test, label<span class="op">=</span><span class="ss">f"Test ROC (AUC = </span><span class="sc">{</span>auc(fpr_test, tpr_test)<span class="sc">:.2f}</span><span class="ss">)"</span>)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"False Positive Rate"</span>)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"True Positive Rate"</span>)</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"ROC Curve: Overfitting Example (High Gamma)"</span>)</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>plt.grid()</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>In this project, I built a Sparse Kernal Machine which is version of logistic regression that encourages sparsity. I tested how different settings of λ and γ affect the model’s behavior.</p>
+<p>I learned that using a large λ makes the model sparse by reducing the number of important training points. I also learned that adjusting γ changes how flexible the decision boundary is: small γ values make smoother boundaries, while large γ values create more complex ones.</p>
+<p>Lastly, I saw how using a high γ can cause the model to overfit, doing well on training data but poorly on new testing data. Overall, this project helped me better understand how regularization and kernel methods work together to affect model complexity and generalization.</p>
+
+
 </section>
 
 </main> <!-- /main -->

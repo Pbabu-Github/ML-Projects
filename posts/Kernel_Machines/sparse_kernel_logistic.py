@@ -31,7 +31,7 @@ class KernelLogisticRegression:
 
     def grad(self, X, y):
         """
-        Gradient of the logistic loss plus L1 regularization.
+        Gradient of the logistic loss + L1 regularization.
         """
         s = self.score(X)
         sigma = torch.sigmoid(s)
@@ -46,7 +46,7 @@ class KernelLogisticRegression:
         """
         self.X_train = X
         self.K_train = self.kernel_function(X, X, **self.kernel_params)
-        self.a = torch.zeros(X.shape[0])  # One dual weight per training sample
+        self.a = torch.zeros(X.shape[0])  # dual weights
 
         for epoch in range(m_epochs):
             grad = self.grad(X, y)
