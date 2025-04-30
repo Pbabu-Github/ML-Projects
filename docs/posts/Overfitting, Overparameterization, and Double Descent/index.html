@@ -248,7 +248,7 @@ window.Quarto = {
 <section id="part-a" class="level3">
 <h3 class="anchored" data-anchor-id="part-a">Part A</h3>
 <p>In my <a href="https://github.com/Pbabu-Github/csci-0451/blob/main/posts/Overfitting%2C%20Overparameterization%2C%20and%20Double%20Descent/LR.py">LY.py</a> file I created a regression model called MyLinearRegression that predicts outputs and calculates the mean-squared error loss. I also implemented an optimizer OverParameterizedLinearRegressionOptimizer that fits the model using the pseudoinverse. This allows the model to work even in the overparameterized setting, when our traditional matrix inversion is not possible.</p>
-<div id="cell-2" class="cell" data-vscode="{&quot;languageId&quot;:&quot;python&quot;}" data-execution_count="3">
+<div id="cell-2" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import our libraries</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext autoreload</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>autoreload <span class="dv">2</span></span>
@@ -262,7 +262,7 @@ window.Quarto = {
 <section id="part-b" class="level3">
 <h3 class="anchored" data-anchor-id="part-b">Part B</h3>
 <p>In the code below, I generated a 1D dataset. I also created a randmon features class to apply a random feature transformation to make the data linearly separable in the new feature space, and then I will fit my linear regression model to this transfomed data.</p>
-<div id="cell-4" class="cell" data-vscode="{&quot;languageId&quot;:&quot;python&quot;}" data-execution_count="4">
+<div id="cell-4" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># creating 1d data</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.tensor(np.linspace(<span class="op">-</span><span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">100</span>).reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), dtype<span class="op">=</span>torch.float64)</span>
@@ -288,7 +288,7 @@ window.Quarto = {
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.activation(X <span class="op">@</span> <span class="va">self</span>.u <span class="op">+</span> <span class="va">self</span>.b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>I will now transorm our features and fit our model based of teh model we created. I then did teh predictions and plotted a graph to view it.</p>
-<div id="cell-6" class="cell" data-vscode="{&quot;languageId&quot;:&quot;python&quot;}" data-execution_count="6">
+<div id="cell-6" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># trnasform our features and fit model</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>phi <span class="op">=</span> RandomFeatures(n_features<span class="op">=</span><span class="dv">300</span>, activation<span class="op">=</span>square)</span>
@@ -325,7 +325,7 @@ window.Quarto = {
 <section id="part-c" class="level3">
 <h3 class="anchored" data-anchor-id="part-c">Part C</h3>
 <p>So we are trying to predict how many corruptions there are in an image. I will do this by first loading our image, then corrupting it multiple times to create a dataset. We will the fit our model using RandomFeatures and the vary n_features to see the double descent in test and training error.</p>
-<div id="cell-8" class="cell" data-vscode="{&quot;languageId&quot;:&quot;python&quot;}" data-execution_count="8">
+<div id="cell-8" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> load_sample_images</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.ndimage <span class="im">import</span> zoom</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -349,7 +349,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Lets add our function that function that ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍adds ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍a ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍random ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍number of randomly sized greay patches to the image and also returns teh number of patches added ‍‍‍‍‍‍‍‍‍‍‍‍‍. Lets then create a corrupted image using that function.</p>
-<div id="cell-10" class="cell" data-vscode="{&quot;languageId&quot;:&quot;python&quot;}" data-execution_count="10">
+<div id="cell-10" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> corrupted_image(im, mean_patches <span class="op">=</span> <span class="dv">5</span>): </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    n_pixels <span class="op">=</span> im.size()</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    num_pixels_to_corrupt <span class="op">=</span> torch.<span class="bu">round</span>(mean_patches<span class="op">*</span>torch.rand(<span class="dv">1</span>))</span>
@@ -395,7 +395,7 @@ window.Quarto = {
 </div>
 </div>
 <p>In our code below we create a dataset of corrupted imagesand also ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍reshape ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍the ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍image. ‍‍‍‍‍We then split ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍the ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍data ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍into ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍training ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍and ‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍test ‍sets.</p>
-<div id="cell-12" class="cell" data-vscode="{&quot;languageId&quot;:&quot;python&quot;}" data-execution_count="12">
+<div id="cell-12" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>n_samples <span class="op">=</span> <span class="dv">200</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.zeros((n_samples, flower.size()[<span class="dv">0</span>], flower.size()[<span class="dv">1</span>]), dtype<span class="op">=</span>torch.float64)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> torch.zeros(n_samples, dtype<span class="op">=</span>torch.float64)</span>
@@ -417,7 +417,7 @@ window.Quarto = {
 <li><p>Measured how well the model did on both the training and test data.</p></li>
 </ul>
 <p>Then I stored the training and test errors so I can plot how they change as the model becomes more complex whic I will use later to see the double descent happening.</p>
-<div id="cell-14" class="cell" data-vscode="{&quot;languageId&quot;:&quot;python&quot;}" data-execution_count="13">
+<div id="cell-14" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">## we will use the same random features function as before</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>train_errors <span class="op">=</span> []</span>
@@ -441,7 +441,7 @@ window.Quarto = {
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    test_errors.append(test_loss) <span class="co"># adding the test loss to the list</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Plotting our results</p>
-<div id="cell-16" class="cell" data-vscode="{&quot;languageId&quot;:&quot;python&quot;}" data-execution_count="21">
+<div id="cell-16" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>interp_threshold <span class="op">=</span> X_train.shape[<span class="dv">0</span>]</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>))</span>
