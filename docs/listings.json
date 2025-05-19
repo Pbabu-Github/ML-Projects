@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/Final_project/blog.html",
       "/posts/Overfitting, Overparameterization, and Double Descent/index.html",
       "/posts/implementing logistic regression/index.html",
       "/posts/perceptron/index.html",

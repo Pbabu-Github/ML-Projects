@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Azan &amp; Prashant Babu">
+<meta name="dcterms.date" content="2025-05-19">
+<meta name="description" content="A blog post about predicting product or service types from dark web data.">
+
+<title>Final Project Blog Post – My Awesome CSCI 0451 Blog</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-6de787833effe4777a6777a5e05fb578.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner h1,
+      .quarto-title-block .quarto-title-banner h2,
+      .quarto-title-block .quarto-title-banner h3,
+      .quarto-title-block .quarto-title-banner h4,
+      .quarto-title-block .quarto-title-banner h5,
+      .quarto-title-block .quarto-title-banner h6
+      {
+        color: white;
+      }
+
+      .quarto-title-block .quarto-title-banner {
+        color: white;
+background-image: url(../../img/landscape.png);
+background-size: cover;
+      }
+</style>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">My Awesome CSCI 0451 Blog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Final Project Blog Post</h1>
+                  <div>
+        <div class="description">
+          A blog post about predicting product or service types from dark web data.
+        </div>
+      </div>
+                </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Azan &amp; Prashant Babu </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 19, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="abstract" class="level1">
+<h1>Abstract:</h1>
+<p>In this project, we built machine learning models to predict the type of product or service being sold on the dark web marketplace Agora using only = data like price, rating, vendor, and shipping details. Our goal was to see if we could classify listings into categories such as Drugs, Services, and Weapons without relying on text analysis. We trained multiple models, including logistic regression, random forest, and a custom multiclass logistic regression built from scratch in PyTorch. We handled class imbalance by downsampling and used evaluation metrics like accuracy and F1 score to measure performance. Our random forest model performed the best, reaching over 94% accuracy. This shows that structured metadata alone can help identify product types on darknet markets. This was a super fun project that we got to work on and learnt a lot from. <a href="https://github.com/Pbabu-Github/ML-Final-Project">GitHub Repo</a></p>
+</section>
+<section id="introduction" class="level1">
+<h1>Introduction:</h1>
+<p>Darknet marketplaces like Agora present a valuable opportunity for machine learning researchers by offering access to large scale, anonymized data from real illegal marketplaces. This kind of data allows us to train models that can help identify patterns in illicit trade and potentially assist law enforcement in detecting and preventing transactions based on recurring keywords, slang, and product types and local names used in these hidden parts of the Internet.</p>
+<p>In this project, our main goal was to build a model that could automatically predict the type of product or service such as “Drugs,” “Services,” or “Weapons” based on basic metadata from the listings. We did this by experimenting with classification models like logistic regression, random forest, and our own implementation of multiclass logistic regression using PyTorch. We also looked into how data imbalance affected model performance and tested how well our models generalize to unseen samples.</p>
+<p>This problem matters because predicting product type from metadata alone could help researchers and officials identify dangerous trends early without needing to parse large amounts data. It also helps us understand if features and information like price, vendor activity, and geographic origin strong enough signals to identify illicit content? Understanding this helps us understand how effective lightweight models can be for dark web analysis before applying more complex NLP or deep learning methods.</p>
+<p>Many researchers have already shown that language on the dark or deep web differs substantially from standard web text. Choshen et al.&nbsp;(2019), for example, trained classifiers to distinguish legal from illegal forum posts and found that dark web posts used fewer personal pronouns and more abbreviation heavy slang features that can strongly influence NLP models. We also found that, Yuan et al.&nbsp;(2018) introduced an unsupervised method to extract dark web specific jargon by comparing frequency patterns between cybercrime forums and public platforms like StackOverflow. These approaches highlight the importance of letting models discover their own meaningful features rather than imposing external definitions of criminal language.</p>
+<p>To push domain specific modeling even further, Jin et al.&nbsp;(2023) introduced DarkBERT, a RoBERTa based language model trained on millions of pages from onion sites. Their model achieved high performance on category classification tasks such as Drugs, Porn, and Financial Services by leveraging raw text data. While our project does not attempt anything at that scale, we do adopt a similar category structure, as Agora dataset already follows the same structure, in order to compare our results, even if loosely, to theirs. Of course, their models had full access to token-level language, while our relied on fixed features, so a direct comparison isn’t logical, but it does help us set a conceptual benchmark that getting really high accuracy scores is possible.</p>
+<p>Ranaldi et al.&nbsp;(2023) take a more technical approach by evaluating how well pre-trained transformer models like BERT and RoBERTa actually generalize to dark web text. Their experiments showed that even strong models fine tuned on standard corpora tend to perform poorly on dark web data unless specifically adapted. They argue that the domain shift is so significant that general LLMs struggle with slang, obfuscation, and even sentence structure. This reinforces the idea, also shown in DarkBERT, that working with dark web language requires domain-adapted models, especially models trained for that exact purpose. While we didn’t use transformers in this project, this helped clarify why basic models like logistic regression still matter as they’re easier to interpret and can help us understand whether we are even learning anything meaningful before scaling up to custom models.</p>
+<p>On the other hand, Raman et al.&nbsp;(2023) offer quite a comprehensive review of dark web research to date, as they mapped over 200 papers and connecting their findings to broader ethical and policy frameworks like the UN Sustainable Development Goals (SDGs). One of their key points is that while dark web research has clear utility, especially for law enforcement and cybersecurity, there’s a persistent lack of discussion around its potential misuse. They emphasize that even anonymized datasets can reinforce racial or geographic stereotypes if researchers aren’t actively accounting for that risk. Their perspective motivated us to consider a more critical lens for the results and patterns we find in this project, or any research of the same topic. It made us consider about not just the accuracy or F1 score, but who might be harmed if those predictions were interpreted out of context, especially in terms or location data etc.</p>
+<p>Overall, our project focused on building models that use structured data to classify products or services being sold on teh dark web. While these models aren’t as powerful as deep learning models, they’re easier to work with, faster to train can still be very useful in real world applications like helping law enforcement</p>
+</section>
+<section id="values-statement" class="level1">
+<h1>Values Statement:</h1>
+<p>The main users who could benefit from our project are law enforcement agencies, cybersecurity analysts, or researchers who study illegal online markets. By using machine learning to classify the types of products and services sold on dark web marketplaces like Agora, our model can help these people identify patterns in illegal trade and better understandwhat kind of products or services are being sold and where products come from and where they are going.</p>
+<p>Beyond direct users, this project could also affect vendors and communities mentioned in the data. Even though the dataset is anonymized, some product listings still include origin or destination information, which can easily be misread. If not handled carefully, our model’s results might create assumptions that certain countries or regions are more involved in illegal activities like drug or weapon sales. For example, seeing lots of listings from one area might lead people to wrongly associate that place with crime. So, we have to be careful that our technology doesn’t reinforce harmful stereotypes or lead to unfair targeting.</p>
+<p>We chose to work on this problem because we were curious about how machine learning could be applied to real-world datasets that deal with sensitive and high-impact topics. In addition to that, the darkweb is just a very interesting topic that got Azaan and me really interested in seeing how we can not only leawrn about the market places in teh dark web but also how we can use machine leanring and apply it to this field. This project gave us a chance to build skills in classification and model evaluation, while also thinking about the ethical aspects of tech. It helped us understand that building models isn’t just about performance but also about understanding the potential impact.</p>
+<p>If used responsibly, the technology we built could help make the world a slightly safer place by providing tools to track illegal products and make interventions that prevent such goods from being exchanged. But it also reminded us that fairness and caution matter just as much as accuracy when applying machine learning to complex, real world problems because of the various potential impacts it could have.</p>
+</section>
+<section id="materials-and-methods" class="level1">
+<h1>Materials and Methods</h1>
+<section id="our-data" class="level2">
+<h2 class="anchored" data-anchor-id="our-data">Our Data:</h2>
+<p>For this project, we used the <a href="https://www.kaggle.com/datasets/philipjames11/dark-net-marketplace-drug-data-agora-20142015?resource=download">Dark Net Marketplace (Agora 2014–2015)</a> dataset available on Kaggle, collected and published by Philip James Kaggle. The dataset contains scraped product listings from the Agora darknet marketplace, which was active between 2014 and 2015. Each row in the dataset represents a single product listing and includes columns like the vendor name, product title and description, category, price in BTC, origin and destination, and vendor rating.</p>
+<p>This dataset came from an HTML dump that a Reddit user named “usheep” shared online. They briefly demanded payment from vendors in exchange for not exposing their identities. While what happened to “usheep” is unknown, the data they posted was later cleaned and made available on Kaggle. Agora shut down a few months afterward, though it’s unclear if the two events are related.</p>
+<p>After loading the dataset, we found that there were over 100,000 listings across a wide range of product types. Some categories like “Drugs” had tens of thousands of listings, while others like “Jewelry” or “Chemicals” had fewer than 100. This imbalance in class sizes was a major factor we had to address during preprocessing and modeling.</p>
+<p>We also noticed that some listings were missing values for important columns like destination, rating, or price, and some entries had strange formatting (e.g., prices with extra text or symbols). We cleaned and standardized these fields by removing non-numeric tokens, fixing country labels, converting prices to USD, and calculating log-transformed price values. We also extracted category and created new features like vendor_activity, which counts how many listings each vendor had overall.</p>
+<p>A limitation of the dataset is that it only reflects the Agora marketplace, which may not fully represent other darknet markets. Also, because the data comes from just a one-year time span (2014–2015), it might not capture how darkweb behavior has changed over time. In addition, while origin and destination fields are included, these are self-reported and may not always be accurate or truthful. The biggest limitation in our project was the heavy class imbalance, as from our data, majority of the products happened to be drugs.</p>
+<p>Another concern is that certain countries or regions appear more often than others, which may reflect user behavior or scraping bias and not the actual activity. So when interpreting model results or patterns, we had to keep in mind that some of this data could be incomplete or misleading. Still, this dataset gives us a rare look into real world illegal market behavior online, which helped us experiment with classification models and try to better understand how different product categories are listed and described on the dark web.</p>
+</section>
+<section id="our-approach" class="level2">
+<h2 class="anchored" data-anchor-id="our-approach">Our Approach:</h2>
+<p>We used the cat1 column as our target variable. This column included the toplevel category for each listing, such as Drugs, Services, Weapons, Counterfeits, and more. As predictors, we used different feautres from our dataset like price, score (vendor rating), origin, destination, and vendor. Later on, we also added a new feature called vendor_activity, which represented how active a vendor was based on their total number of listings.</p>
+<p>We subset the data in different ways throughout the project. At first, we removed listings with missing price, rating, or destination data. We also dropped rows where the cat1 category was undefined. In on of our expeirments for our project, since the dataset was very imbalanced, we manually downsampled the majority class (mostly “Drugs”) and removed very small categories with fewer than 500 examples (like Chemicals, Tobacco, and Jewelry). We created a balanced dataset with 600 listings per class to help our model learn equally from each category. We used the rest of the unused data for testing how the models generalize on unseen samples.</p>
+<p>We trained two main models on this data: Logistic Regression and Random Forest. We chose logistic regression as our baseline because it is simple, and fast to train. We used the multinomial regression with class weights set to “balanced” to account for data imbalnnce when using the original dataset where we did not do the downsampling. We then chose Random Forest because it could capture more complex patterns and because it usually performs better on structured data with class imbalance.</p>
+<p>We trained our models using Scikit-learn on Jupyter notebook using our Conda envrionment. We also implemented our own multiclass logistic regression model from scratch using PyTorch. This helped us understand the full training process, including caulating softmax probabilities, cross-entropy loss, and updating weights using gradient descent with momentum.</p>
+<p>For evaluation, we split our dataset using an 80-20 train-test split. We measured performance using accuracy, macro F1 score, and micro F1 score. We used confusion matrices and classification reports to see how well each class was predicted. We also used GridSearchCV to tune the regularization strength for logistic regression, and compared those results to our orginal model’s results.</p>
+<p>We did not perform a full bias audit, but we were aware of issues that can come from imbalanced data and possible harm. For example, we were careful not to make conclusions about countries listed in the origin and destination fields because they could reflect vendor input and not actual geography. We focused on evaluating fairness using macro F1 scores, which treat all classes equally regardless of their size.</p>
+</section>
+<section id="baseline-logistic-regression-model" class="level2">
+<h2 class="anchored" data-anchor-id="baseline-logistic-regression-model">Baseline: Logistic Regression Model</h2>
+<p>We experimented with logistic regression using both One-vs-Rest (OvR) and Multinomial classifiers to predict product categories based on features like price, vendor activity, origin, and destination. Both models used class_weight=“balanced” to address class imbalance, especially since categories like “Drugs” were heavily overrepresented.</p>
+<p>The OvR model performed better overall, achieving an accuracy of 66.3%, a macro F1 score of 23.8%, and a micro F1 score of 66.3%. It achieved a strong F1 score of 83% on the dominant “Drugs” class but struggled on rare categories like “Chemicals” (2%), “Weapons” (13%), and “Jewelry” (12%), which pulled down the overall macro F1.</p>
+<p>In contrast, the Multinomial model had lower accuracy at 46.1% and a macro F1 score of 21.9%, misclassifying more listings from the “Drugs” category and performing worse across most classes. Confusion matrices for both models showed a clear bias toward majority classes, revealing that using class weighting alone wasn’t enough to ensure balanced performance across all categories.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./confusion-matrix.png" class="img-fluid figure-img"></p>
+<figcaption>Confusion matrix</figcaption>
+</figure>
+</div>
+<p>We tested whether adding new features like vendor and vendor_activity would improve performance, and the results confirmed our hypothesis. The One-vs-Rest (OvR) logistic regression model showed a major improvement, with an accuracy of 88.61%, a macro F1 score of 57%, and a micro F1 score of 89.0%. The Multinomial model also improved, reaching 84.29% accuracy, a macro F1 score of 55.0%, and a micro F1 score of 84.0%.</p>
+<p>These improvements make sense because certain vendors specialize in specific product types like drugs or counterfeit goods. Including vendor related features gave the model stronger, more reliable signals, helping it make more accurate and balanced predictions—especially for the smaller, underrepresented categories.</p>
+<p>After seeing performance improvements from adding vendor and vendor_activity as features, we moved on to fine-tune our logistic regression model using GridSearchCV. This allowed us to test multiple values for the regularization parameter C and find the best configuration using 5-fold cross-validation. Because our dataset is imbalanced, we used the macro F1 score as our evaluation metric to ensure the model considered all classes equally—including the minority ones. GridSearchCV helped us identify the most effective C value while maintaining our preprocessing steps like scaling numeric features and one-hot encoding categorical ones. The result was a more balanced and generalizable logistic regression model.</p>
+<p>After fitting our fine-tuned model, we saw strong results: the accuracy reached 88.95%, and the macro F1 score improved to 58.12%. This was a clear boost compared to earlier versions of the model. Looking at per class performance, the model still did very well on the dominant “Drugs” category, but also improved on smaller categories like “Jewelry”, “Weapons”, “Information”, and “Services.” Precision and recall scores were more evenly distributed across classes, meaning the model was making more reliable predictions. Some small categories like “Chemicals” and “Other” remained challenging, but overall, the results showed that tuning made the model fairer and more accurate across product types.</p>
+<p>To better understand what was driving this improved performance, we examined the model’s coefficients. We looked at the top 20 most influential features by taking the absolute average weight across all classes. The most impactful feature was vendor_optiman, with a coefficient magnitude of 3.05—far above any other. This suggests that this vendor has a unique listing pattern that is highly predictive of certain categories. Other strongly weighted vendors included vendor_profesorhouse, vendor_fake, and vendor_Bigdeal100, all of which appear consistently associated with specific product types. This confirms that vendor identity played a major role in the model’s decision making and helped boost classification accuracy.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./inf-feat.png" class="img-fluid figure-img"></p>
+<figcaption>influential features</figcaption>
+</figure>
+</div>
+<p>In fact, nearly all top 20 features are vendor related, confirming that the model relies heavily on vendor names to distinguish categories. This supports the hypothesis that many vendors specialize in certain niches (e.g., drugs, counterfeit items, or digital goods), and their presence acts as a strong proxy for the class label.</p>
+<p>Only two non vendor features:<code>origin_Internet</code> and <code>origin_Torland</code>, made it into the top 20, indicating that origin still plays a minor role but is far less informative than vendor identity. Notably absent are price related features like <code>log_usd</code> or behavioral indicators like <code>vendor_activity</code>, which are highly influential in the Random Forest model as we can see in the discussion below. This suggests that Logistic Regression, being linear, is more sensitive to categorical signals tied directly to vendor behavior than to continuous variables like price. Overall, vendor identity emerges as the dominant signal in guiding classification decisions for the logistic regression model.</p>
+<p>Afterwards, we wanted to look at the cross-validation results for our tuned-LR model and it revealed that the optimal regularization strength occurs at <code>C=0.1</code>, achieving the highest macro F1 score of 57.6%. This value of <code>C</code> provides a moderate level of regularization, strong enough to prevent overfitting on noisy or sparse vendor and location features, but not so strong that it underfits the true decision boundaries. Interestingly, increasing <code>C</code> beyond this point (to 1, 10, and even 100) led to a slight but consistent decline in performance, with macro F1 scores dropping to around 56.4%–56.9%. This suggests that as the model became less regularized, it likely overfit to the dominant classes or high-cardinality features like vendor names, harming its ability to generalize across all classes.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./crossval.png" class="img-fluid figure-img"></p>
+<figcaption>Cross val</figcaption>
+</figure>
+</div>
+<p>Lowering <code>C</code> below 0.1 hurt performance even more dramatically: <code>C=0.01</code> dropped the score to 48.3%, and <code>C=0.001</code> plummeted it to 35.4%. This confirms that overly strong regularization forces the model to ignore valuable signal in the feature set, especially in a task like this one, where vendorspecific patterns carry a lot of predictive power. Overall, we agreed that the LR model is quite sensitive to the <code>C</code> parameter, with a sweet spot around 0.1. The relatively low standard deviations ≈0.005–0.008, across folds also show stable cross validation behavior, giving us confidence in this tuned configuration.</p>
+</section>
+<section id="random-forest-classifier" class="level2">
+<h2 class="anchored" data-anchor-id="random-forest-classifier">Random Forest Classifier:</h2>
+<p>After testing logistic regression, we switched to a random forest classifier using the same pipeline and saw a significant improvement in performance. With 500 trees and class balancing, the model achieved 94.8 percent accuracy and a macro F1 score of 74.1 percent, which was a clear improvement over the logistic regression model. This gain is likely because random forests handle complex, nonlinear patterns well and are more robust to class imbalance, which the LR model had trouble identifying. As a result, the model gave more accurate and fair predictions across all product categories.</p>
+<p>Since our base random forest model was already performing well, we used GridSearchCV to automatically tune the hyperparameters like we did for LR model, as described above. Our tuned-RF model performed strongly, achieving 94.8 percent accuracy and a macro F1 score of 74.1 percent using default parameters and class balancing. It handled the dominant class “Drugs” very well and also performed reliably on both mid-sized and smaller categories. After tuning with GridSearchCV, we found that the best parameters matched our original setup, confirming that our initial choices were already near-optimal. Since performance remained the same, further tuning would offer little improvement and might waste resources. Overall, the model proved to be effective without needing extensive hyperparameter adjustments.</p>
+<p>Similar to LR model, we decided to look into the Feature Importance plot for RF model as well. <img src="./feat-imp.png" class="img-fluid" alt="feature importance matrix"></p>
+<p>As we can see from the plot above, The top 20 features from our tuned Random Forest model highlight which inputs were most valuable for classification. The most important was “log_usd” (log-transformed price), which alone contributed nearly 29 percent of the model’s total importance. This aligns with intuition, as different product categories often have distinct pricing patterns. The next key feature was “vendor_activity,” contributing over 8 percent, showing that how active a vendor is can indicate what kind of products they sell.</p>
+<p>Most of the remaining top features were one-hot encoded vendor names, such as vendor_Bigdeal100, vendor_precursor-sultan, and vendor_optiman, suggesting that specific vendors were heavily associated with certain product types. A few origin and destination features also appeared in the top 20—like origin_China and destination_Worldwide—showing that location still had moderate predictive power, particularly for categories like chemicals or tobacco. Altogether, the model relied heavily on a combination of vendor specific and geographic metadata to make accurate predictions.</p>
+<p>Again, similar to our process with the LR model, we looked into the cross-validation snapshot for our hyper-tuned RF model and found that: <img src="./crossval-rf.png" class="img-fluid" alt="Cross validation rf"></p>
+<p>Our cross validation results confirmed that the model performs best with deep, unrestricted trees. The top configurations all used max_depth=None and min_samples_leaf=1, achieving a macro F1 score around 71.7 percent with very low variance across folds. Introducing depth limits like 50 or 30 led to noticeable performance drops, suggesting that deeper trees better capture the complexity of our data. These findings reinforce that our original setup—300 trees with no depth limit—was already near-optimal.</p>
+</section>
+<section id="custom-lr-model" class="level2">
+<h2 class="anchored" data-anchor-id="custom-lr-model">Custom LR Model:</h2>
+<p>We also built our own multiclass logistic regression model from scratch using PyTorch. We used a weight matrix for all classes, applied the softmax function for predictions, and optimized it using gradient descent with momentum. This model trained over 1000 epochs and reached about 63.2% test accuracy. Its performance was the closest to the basic logistic regression model. For future works we plan to fine tune this model and maybe implement a pytorch neural network to increase its accuracy significantly.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./image-train-loop.png" class="img-fluid figure-img"></p>
+<figcaption>Training Loop</figcaption>
+</figure>
+</div>
+<p>Overall, the Random Forest classifier was the most successful at classifying the products correctly across all classes. It outperformed logistic regression, especially on smaller categories, which often get ignored in imbalanced datasets. Our custom model helped us understand how softmax regression works at a deeper level, and it could be improved with more tuning or regularization in future work.</p>
+</section>
+</section>
+<section id="concluding-discussion" class="level1">
+<h1>Concluding Discussion:</h1>
+<p>Our goal was to build a model that predicts the category of a product or service being sold on the Agora dark web marketplace based on the features we picked, which were: “deals”, “log_usd”, “origin”, “destination”, “vendor_activity”, and “vendor”. Overall, our project worked fairly well. We were able to train and test different models like logistic regression, random forest using scikit-learn methods, as well as a custom Multi-nomial Logistic Regression model that we built from scratch. Not only that, we also compared the result difference between using “OvR” and “Multinomial” options in our imported Log. Reg. model from Scikit-learn. We realized that if we chose ‘ovr’, then a binary problem is fit for each label. For ‘multinomial’ the loss minimized is the multinomial loss fit across the entire probability distribution, even when the data is binary. Comparing the results, we found that “OvR” actually performs better for our dataset, especially for Accuracy.</p>
+<p>We successfully met most of the goals we set in our proposal, since we built working classification models, tested them on real unseen data, and improved their performance by balancing the training set and tuning the hyperparameters. We also made sure that our hyperparameter tuned model performed better than the base model, or the majority baseline. We found that the random forest model provided the best results, especially for categories like Drugs, Information, and Counterfeits. We also used confusion matrices and classification reports to compare and contrast between each model, as it helped us identify where the model performed well and where it struggled. Lastly, we plotted Coefficient Matrix and Feature Importance plots of our Log. Reg and RFC models, respectively, along with their cross-validation snapshot table that helped us pinpoint the parameters that allows our model to perform the best.</p>
+<p>Our results compare very similarly to the other papers and studies we mentioned earlier in the Introduction, since all of them had quite positive result, especially DarkBert had more than 93% in accuracy and F1 metrics. We did reach up to 95% in accuracy, we did fall short in F1-Macro scores, getting up to 74.1% using tuned RFC model.</p>
+<p>If we had more time or resources, we would have tried implementing a TF-ID vectorization model based on the product descriptions of Agora, as well as include even larger dataset and train our model on the combined dataset, following DarkBert’s footsteps, to getting even more variety and diversity in our dataset. If technological limitations weren’t a concern, we would have tested even larger hyper-parameter ranges with multiple combinations, which would increase our code runtime exponentially. Lastly, we also would have done a deeper analysis for bias in the data, and look for possible solutions of acknowledging and mitigating them before it contaminates the data or skews the narrative of the results in unintended directions.</p>
+</section>
+<section id="group-contributions-statement" class="level1">
+<h1>Group Contributions Statement:</h1>
+<p>Azan and Prashanth Babu (PB) worked together on this project. Azan found the Agora dataset and Pb and Azaan worked together to decide the overall direction of the project. Both Azan and PB worked together on the preprocessing and cleaning of the dataset at the beginning. Azan cleaned and finalized the version of the dataset that we used for training the models and also started the exploratory data analysis. PB continued the rest of the data exploration afterward.</p>
+<p>Azan trained the logistic regression model and built the pipeline for both the logistic regression and random forest models. PB worked on fine tuning the logistic regression model using GridSearchCV and tested and evaluated the results. PB also worked on manual balancing of the dataset by downsampling, ran experiments on how different sampling sizes impacted model performance, and built and tested a custom multiclass logistic regression model from scratch in PyTorch.</p>
+<p>Azan wrote the introduction and abstract sections of the blog post. PB wrote the mission and values, the approach, and the dataset/methods section. Both Azan and PB worked together to write the results and concluding discussion sections of the blog post.</p>
+</section>
+<section id="personal-reflection" class="level1">
+<h1>Personal Reflection:</h1>
+<p>From this project,I learned many things like how to use machine learning to solve complex issues that have big potential use in the real world and many things about communitcation and team work and even learned how to build a multiclass logistic regression model from scratch using PyTorch. I also learned that communication is very important, especially when working with a partner. At times, it was hard to work together because our schedules were different and our communication wasn’t always clear. I realized that actually sitting down, planning clearly, and talking through ideas step-by-step made a big difference. It helped us understand what to do, how to divide the work, and how to move forward instead of wasting time on unclear messages.</p>
+<p>I feel very proud of what we achieved in this project. Even though our custom model didn’t have the highest accuracy, I was really happy that I was able to build and train it myself. That was a big accomplishment for me, and it made me more excited about trying harder machine learning projects in the future. I think we mostly met our original goal, which was to get around 70% accuracy when predicting product categories. We even got around 94% accuracy with our final random forest model, which was great. But I do think that we would have done even better if we had a more diverse dataset with less class imbalance.</p>
+<p>This experience taught me a lot. At first, I didn’t know how to do multiclass classification and just wanted to stick with binary because it seemed easier. But I pushed myself to learn something new. I failed a few times, but I kept going and finally figured it out. That showed me that even when something is hard, if you keep trying, you can learn it. I want to carry that lesson with me to other courses, projects, and my future career. Now I feel more confident to take on challenges and keep pushing through when things get tough.</p>
+</section>
+<section id="link-to-project-github" class="level1">
+<h1>Link to Project Github</h1>
+<p><a href="https://github.com/Pbabu-Github/ML-Final-Project">Final Project Report</a></p>
+</section>
+<section id="references" class="level1">
+
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-choshen2019" class="csl-entry" role="listitem">
+Choshen, Leshem, Dan Eldad, Daniel Hershcovich, Elior Sulem, and Omri Abend. 2019. <span>“The Language of Legal and Illegal Activity on the Darknet.”</span> In <em>Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics</em>, 4271–79. Florence, Italy: Association for Computational Linguistics. <a href="https://doi.org/10.18653/v1/P19-1419">https://doi.org/10.18653/v1/P19-1419</a>.
+</div>
+<div id="ref-jin2023" class="csl-entry" role="listitem">
+Jin, Youngjin, Eugene Jang, Jian Cui, Jin-Woo Chung, Yongjae Lee, and Seungwon Shin. 2023. <span>“DarkBERT: A Language Model for the Dark Side of the Internet.”</span> <a href="https://arxiv.org/abs/2305.08596">https://arxiv.org/abs/2305.08596</a>.
+</div>
+<div id="ref-jin2022" class="csl-entry" role="listitem">
+Jin, Youngjin, Eugene Jang, Yongjae Lee, Seungwon Shin, and Jin-Woo Chung. 2022. <span>“Shedding New Light on the Language of the Dark Web.”</span> In <em>Proceedings of the 2022 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies</em>, 5621–37. Seattle, United States: Association for Computational Linguistics. <a href="https://doi.org/10.18653/v1/2022.naacl-main.412">https://doi.org/10.18653/v1/2022.naacl-main.412</a>.
+</div>
+<div id="ref-raman2023" class="csl-entry" role="listitem">
+Raman, Raghu, Vinith Kumar Nair, Prema Nedungadi, Indrakshi Ray, and Krishnashree Achuthan. 2023. <span>“Darkweb Research: Past, Present, and Future Trends and Mapping to Sustainable Development Goals.”</span> <em>Heliyon</em> 9 (11): e22269. https://doi.org/<a href="https://doi.org/10.1016/j.heliyon.2023.e22269">https://doi.org/10.1016/j.heliyon.2023.e22269</a>.
+</div>
+<div id="ref-ranaldi2023" class="csl-entry" role="listitem">
+Ranaldi, Leonardo, Aria Nourbakhsh, Arianna Patrizi, Elena Sofia Ruzzetti, Dario Onorati, Michele Mastromattei, Francesca Fallucchi, and Fabio Massimo Zanzotto. 2023. <span>“The Dark Side of the Language: Pre-Trained Transformers in the DarkNet.”</span> In <em>Proceedings of the Conference Recent Advances in Natural Language Processing - Large Language Models for Natural Language Processings</em>, 949–60. RANLP. INCOMA Ltd Shoumen, BULGARIA. <a href="https://doi.org/10.26615/978-954-452-092-2_102">https://doi.org/10.26615/978-954-452-092-2_102</a>.
+</div>
+<div id="ref-yuan2018" class="csl-entry" role="listitem">
+Yuan, Kan, Haoran Lu, Xiaojing Liao, and XiaoFeng Wang. 2018. <span>“Reading Thieves’ Cant: Automatically Identifying and Understanding Dark Jargons from Cybercrime Marketplaces.”</span> In <em>27th USENIX Security Symposium (USENIX Security 18)</em>, 1027–41. Baltimore, MD: USENIX Association. <a href="https://www.usenix.org/conference/usenixsecurity18/presentation/yuan-kan">https://www.usenix.org/conference/usenixsecurity18/presentation/yuan-kan</a>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
