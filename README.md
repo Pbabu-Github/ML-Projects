@@ -31,7 +31,7 @@ This repository contains my machine learning projects. Each blog post is based o
 
 ---
 
-### 4. Dark Web Product Classification
+### 4. Dark Web Product and Service Classification
 
 * **Goal:** Classify listings on the Agora darknet marketplace into categories (Drugs, Services, Weapons, etc.) using only metadata (price, rating, vendor, shipping).
 * **Methods:** Logistic regression, random forest, and a custom PyTorch implementation of multiclass logistic regression.
